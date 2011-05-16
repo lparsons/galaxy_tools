@@ -109,8 +109,6 @@ The tool is based on the opensource cutadapt_ tool.
 cutadapt uses a simple semi-global alignment algorithm, without any special optimizations.
 For speed, the algorithm is implemented as a Python extension module in calignmodule.c.
 
-The program is sufficiently fast for my purposes, but speedups should be simple to achieve.
-
 
 **Partial adapter matches**
 
@@ -146,7 +144,7 @@ at least the SOLiD and Illumina small RNA protocols and probably others.
 
 If, on the other hand, your adapter can also be ligated to the 5' end (on
 purpose or by accident), you should tell cutadapt so by using the *5' or 3' (Anywhere)
-Adapters parameter. It will then use a different alignment algorithm and
+Adapters* parameter. It will then use a different alignment algorithm and
 correctly trim adapters that appear in the beginning of a read. An adapter
 specified this way will also be found if it appears only partially in the
 beginning of a read. For example, these sequences
