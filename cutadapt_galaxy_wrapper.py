@@ -14,6 +14,7 @@ SYNOPSIS
         [--discard discard trimmed reads]
         [-m minimum read length]
         [-M maximum read length]
+        [-q quality cutoff]
         [-h,--help] [-v,--verbose] [--version]
 
 DESCRIPTION
@@ -64,6 +65,9 @@ def main ():
         params.append("-m %s" % options.minimum_length)
     if options.maximum_length != None:
         params.append("-M %s" % options.maximum_length)
+    if options.cutoff != None:
+        params.append("-q %s" % options.cutoff)
+
 
     # cutadapt relies on the extension to determine file format: .fasta or .fastq
     input_name = '.'.join((options.input,options.format))
@@ -107,6 +111,8 @@ if __name__ == '__main__':
         parser.add_option ('--discard', '--discard-trimmed', dest='discard_trimmed', action='store_true', default=False, help='Discard reads that contain the adapter')
         parser.add_option ('-m', '--minimum-length', dest='minimum_length', help='Discard reads that are shorter than LENGTH')
         parser.add_option ('-M', '--maximum-length', dest='maximum_length', help='Discard reads that are longer than LENGTH')
+        parser.add_option ('-q', '--quality-cutoff', dest='cutoff', help='Trim
+                           low quality ends from reads before adapter removal')
         parser.add_option ('-o', '--output', dest='output_file', help='The modified sequences are written to the file')
         (options, args) = parser.parse_args()
         if options.input == None:

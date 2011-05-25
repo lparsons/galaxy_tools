@@ -1,10 +1,10 @@
-<tool id="cutadapt" name="Remove adapter sequences" version="0.9.3">
+<tool id="cutadapt" name="Remove adapter sequences" version="0.9.4">
 	<description>from high-throughput sequence data</description>
 	<requirements>
 		<requirement type="python-module">cutadapt</requirement>
 	</requirements>
 
-	<command interpreter="python">cutadapt_galaxy_wrapper.py 
+	<command>cutadapt 
 		#if $input.extension.startswith( "fastq"):
 		--format=fastq
 		#else
@@ -25,9 +25,12 @@
 		#if str($max) != '0':
 		-M $max
 		#end if
-		--input='$input'
+		#if $discard:
+		--discard
+		#end if
+		'$input'
 		--output='$output' 
-		> $report
+		2> $report
 	</command>
 	<inputs>
 		<param format="fastqsanger, fasta" name="input" type="data" optional="false" label="Fastq file to trim" length="100"/>
@@ -78,7 +81,7 @@
 		<param name="error_rate" type="float" min="0" max="1" value="0.1" label="Maximum error rate" help="Maximum allowed error rate (no. of errors divided by the length of the matching region)." />
 		<param name="count" type="integer" min="1" value="1" label="Match times" help="Try to remove adapters at most COUNT times. Useful when an adapter gets appended multiple times." />
 		<param name="overlap" type="integer" min="1" value="3" label="Minimum overlap length" help="Minimum overlap length. If the overlap between the adapter and the sequence is shorter than LENGTH, the read is not modified." />
-		<!--<param name="discard" type="boolean" checked="false" label="Discard Trimmed Reads" help="Discard reads that contain the adapter instead of trimming them. Use the 'Minimum overlap length' option in order to avoid throwing away too many randomly matching reads!" />-->
+		<param name="discard" type="boolean" checked="False" default="False" label="Discard Trimmed Reads" help="Discard reads that contain the adapter instead of trimming them. Use the 'Minimum overlap length' option in order to avoid throwing away too many randomly matching reads!" />
 		<param name="min" type="integer" min="0" optional="true" value="0" label="Minimum length" help="Discard trimmed reads that are shorter than LENGTH.  Reads that are too short even before adapter removal are also discarded. In colorspace, an initial primer is not counted. Value of 0 means no minimum length." />
 		<param name="max" type="integer" min="0" optional="true" value="0" label="Maximum length" help="Discard trimmed reads that are longer than LENGTH.  Reads that are too long even before adapter removal are also discarded. In colorspace, an initial primer is not counted. Value of 0 means no maximum length." />
 	</inputs>
