@@ -4,7 +4,7 @@
 		<requirement type="python-module">cutadapt</requirement>
 	</requirements>
 
-	<command>cutadapt 
+	<command interpreter="sh">discard_stderr_wrapper.sh cutadapt
 		#if $input.extension.startswith( "fastq"):
 		--format=fastq
 		#else
@@ -30,7 +30,7 @@
 		#end if
 		'$input'
 		--output='$output' 
-		2> $report
+		> $report
 	</command>
 	<inputs>
 		<param format="fastqsanger, fasta" name="input" type="data" optional="false" label="Fastq file to trim" length="100"/>
