@@ -4,16 +4,21 @@ Installation
 ------------
 
 1 - Install the cutadapt package and make sure it is in path for Galaxy
-2 - Copy cutadapt.xml and cutadapt_galaxy_wrapper.py to $GALAXY_HOME/tools/cutadapt
+2 - Copy cutadapt.xml to $GALAXY_HOME/tools/cutadapt
 3 - Add the tool to the $GALAXY_HOME/tool_conf.xml tool-registry file
+
+Optional steps to setup and run Galaxy functional tests
+
+4 - Copy test-data/* to $GALAXY_HOME/test-data/
+5 - Set GALAXY_TEST_TOOL_CONF environment variable to a tool_conf.xml file that
+    contains the tools you want to test. (e.g. 'tool_conf.xml')
+6 - $GALAXY_HOME/run_functional_tests.sh -id cutadapt 
+    See the Galaxy Wiki for more information: http://wiki.g2.bx.psu.edu/
 
 
 Limitations
 -----------
 
-Colorspace data is not implemented
-Discard trimmed reads is not implemented (broken in cutadapt 0.9.3)
-Storing of "rest fo read" after the adapter (-r), too-short reads (--too-short-output), and untrimmed-reads (--untreimmed-output) are not implemented
-Quality cutoff (-q) not implemented
+Colorspace data support is not implemented
 Prefix and Suffix to read names not implemented
 Length-tag addition to read name not implemented
