@@ -19,7 +19,7 @@
         <param format="fastq, fastqillumina, fastqsanger, fastqsolexa" name="read1" type="data" label="Read 1 Fastq" />
         <param format="fastq, fastqillumina, fastqsanger, fastqsolexa" name="read2" type="data" label="Read 2 Fastq" />
         <param name="splitChar" type="text" value=" " label="Split read ids on this character" help="Default is space ' ' for Illumina reads" />
-        <param name="pctMaxDiff" type="float" value="0.20" min="0" max="1" label="Maximum difference (fraction of bases) between matching segments" />
+        <param name="pctMaxDiff" type="float" value="8" min="0" max="100" label="Maximum percentage difference between matching segments" />
         <param name="minOverlap" type="integer" value="6" min="1" label="Minimum length of matching segements" />
         <param name="stitchLengthReport" type="boolean" value="False" label="Output verbose stitch length report" />
     </inputs>
@@ -54,7 +54,7 @@ fastq-join joins two paired-end reads on the overlapping ends.
 
 Split read ids character: Verifies that the 2 files probe id's match up to char C. Use ' ' for Illumina reads.
 
-Maximum difference is the maximum allowed fraction of bases that differ in the matching region.
+Maximum difference is the maximum allowed percentage of bases that differ in the matching region.
 
 Minimum overlap is the minimum number of bases that must overlap (with no more than the maximum difference) for reads to be joined.
 
