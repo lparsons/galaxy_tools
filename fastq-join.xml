@@ -37,24 +37,15 @@
         <exit_code range="1:" level="fatal" description="Unknown error occurred" />
     </stdio>
 
-    <!-- NO TESTS DEFINED YET
     <tests>
         <test>
-            <param name="samfile" value="htseq-test.sam" />
-            <param name="gfffile" value="htseq-test.gff" />
-            <param name="samout" value="False" />
-            <output name="counts" file="htseq-test_counts.tsv" />
-            <output name="othercounts" file="htseq-test_othercounts.tsv" />
-        </test>
-        <test>
-            <param name="samfile" value="htseq-test.bam" />
-            <param name="gfffile" value="htseq-test.gff" />
-            <param name="samout" value="False" />
-            <output name="counts" file="htseq-test_counts.tsv" />
-            <output name="othercounts" file="htseq-test_othercounts.tsv" />
+            <param name="read1" value="test_read1.fastq" />
+            <param name="read2" value="test_read3.fastq" />
+            <output name="outputJoined" file="testout.join.fastq" />
+            <output name="outputUnmatched1" file="testout.un1.fastq" />
+            <output name="outputUnmatched2" file="testout.un2.fastq" />
         </test>
     </tests>
-    -->
 
     <help>
 Overview
