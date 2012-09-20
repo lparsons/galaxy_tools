@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="ea-utils" version="1.1.2-469">
+        <install version="1.0">
+            <actions>
+                <action type="download_by_url">http://ea-utils.googlecode.com/files/ea-utils.1.1.2-469.tar.gz</action>
+                <!-- sam-stats and varcall require an extra Bamtools library and we don't need them, so skip -->
+                <action type="shell_command">sed -i.bak 's/sam-stats varcall$//' Makefile</action>
+                <action type="shell_command">PREFIX=$INSTALL_DIR make install</action>
+                <action type="set_environment">
+                    <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+                </action>
+            </actions>
+        </install>
+        <readme>
+        </readme>
+    </package>
+</tool_dependency>
