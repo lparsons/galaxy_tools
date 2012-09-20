@@ -41,8 +41,8 @@
         &amp;&amp; samtools view -Su -t ${reference_fasta_filename}.fai $__new_file_path__/${samoutfile.id}_tmp | samtools sort -o - sorted > $samoutfile
     #end if</command>
     <inputs>
-        <param format="sam, bam" name="samfile" type="data" label="Aligned SAM File">
-            <help>Paired-End data must be sorted by QUERY NAME, use Picard Read Mate Fixer and Query name sort order before using this tool on paired data</help>
+        <param format="sam, bam" name="samfile" type="data" label="Aligned SAM/BAM File">
+            <help>Paired-End data MUST be sorted by QUERY NAME, use Picard Read Mate Fixer and Query name sort order before using this tool on paired data</help>
         </param>
         <param format="gff" name="gfffile" type="data" label="GFF File"/>
         <param name="mode" type="select" label="Mode">
@@ -64,7 +64,7 @@
             <help>Feature type (3rd column in GFF file) to be used. All features of other types are ignored. The default, suitable for RNA-Seq and Ensembl GTF files, is exon.</help>
         </param>
         <param name="idattr" type="text" value="gene_id" label="ID Attribute">
-            <help>GFF attribute to be used as feature ID. Several GFF lines with the same feature ID will be considered as parts of the same feature. The feature ID is used to identity the counts in the output table. The default, suitable for RNA-SEq and Ensembl GTF files, is gene_id.</help>
+            <help>GFF attribute to be used as feature ID. Several GFF lines with the same feature ID will be considered as parts of the same feature. The feature ID is used to identity the counts in the output table. All features of the specified type MUST have a value for this attribute. The default, suitable for RNA-SEq and Ensembl GTF files, is gene_id.</help>
         </param>
         <conditional name="samout_conditional">
             <param name="samout" type="boolean" value="False" truevalue="True" falsevalue="False" label="Additional BAM Output">
@@ -102,6 +102,10 @@
 
     <stdio>
         <exit_code range="1:" level="fatal" description="Unknown error occurred" />
+        <regex match="htseq-count: command not found" source="stderr" level="fatal" description="The HTSeq python package is not properly installed, contact Galaxy administrators" />
+        <regex match="samtools: command not found" source="stderr" level="fatal" description="The samtools package is not properly installed, contact Galaxy administrators" />
+        <regex match="Error: Feature (.+) does not contain a '(.+)' attribute" source="both" level="fatal" description="Error parsing the GFF file, at least one feature of the specified 'Feature type' does not have a value for the specified 'ID Attribute'" />
+        <regex match="Error occured in line (\d+) of file" source="stderr" level="fatal" description="Unknown error parsing the GFF file" />
     </stdio>
 
     <tests>
