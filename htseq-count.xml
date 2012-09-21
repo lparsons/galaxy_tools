@@ -1,4 +1,4 @@
-<tool id="htseq_count" name="htseq-count" version="0.2">
+<tool id="htseq_count" name="htseq-count" version="0.2.1">
     <description> - Count aligned reads in a BAM file that overlap features in a GFF file</description>
     <version_command>htseq-count -h | grep version | sed 's/^\(.*\)*\(version .*\)\./\2/'</version_command>
     <requirements>
