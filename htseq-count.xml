@@ -25,7 +25,7 @@
     --mode=$mode 
     --stranded=$stranded 
     --minaqual=$minaqual 
-    --type=$type 
+    --type=$featuretype 
     --idattr=$idattr 
     #if $samout_conditional.samout:
         --samout=$__new_file_path__/${samoutfile.id}_tmp
@@ -42,7 +42,7 @@
     #end if</command>
     <inputs>
         <param format="sam, bam" name="samfile" type="data" label="Aligned SAM/BAM File">
-            <help>Paired-End data MUST be sorted by QUERY NAME, use Picard Read Mate Fixer and Query name sort order before using this tool on paired data</help>
+            <help>Paired-End data MUST be sorted by QUERY NAME, use "NGS: Picard - Paired Read Mate Fixer" to sort by QUERY NAME and output to SAM (not BAM) before using this tool on paired data.</help>
         </param>
         <param format="gff" name="gfffile" type="data" label="GFF File"/>
         <param name="mode" type="select" label="Mode">
@@ -60,7 +60,7 @@
         <param name="minaqual" type="integer" value="0" label="Minimum alignment quality">
             <help>Skip all reads with alignment quality lower than the given minimum value</help>
         </param>
-        <param name="type" type="text" value="exon" label="Feature type">
+        <param name="featuretype" type="text" value="exon" label="Feature type">
             <help>Feature type (3rd column in GFF file) to be used. All features of other types are ignored. The default, suitable for RNA-Seq and Ensembl GTF files, is exon.</help>
         </param>
         <param name="idattr" type="text" value="gene_id" label="ID Attribute">
@@ -106,6 +106,7 @@
         <regex match="samtools: command not found" source="stderr" level="fatal" description="The samtools package is not properly installed, contact Galaxy administrators" />
         <regex match="Error: Feature (.+) does not contain a '(.+)' attribute" source="both" level="fatal" description="Error parsing the GFF file, at least one feature of the specified 'Feature type' does not have a value for the specified 'ID Attribute'" />
         <regex match="Error occured in line (\d+) of file" source="stderr" level="fatal" description="Unknown error parsing the GFF file" />
+        <regex match="Error" source="stderr" level="fatal" description="Unknown error occured" />
     </stdio>
 
     <tests>
