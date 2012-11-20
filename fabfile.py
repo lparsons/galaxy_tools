@@ -15,6 +15,6 @@ def package():
     local('mkdir -p package')
     local('rm -f package/ea-utils_%s.tar.gz' % version)
     if version == 'test':
-        local('tar czvf package/ea-utils_%s.tar.gz --exclude "fabfile.*" --exclude "package" --exclude ".hg" *' % version)
+        local('tar czvf package/ea-utils_%s.tar.gz --exclude "fabfile.*" --exclude "package" --exclude ".hg*" *' % version)
     else:
-        local('hg archive -t tgz %s -X "fabfile.*" -X "package" -p . "package/ea-utils_%s.tar.gz"' % (revision, version))
+        local('hg archive -t tgz %s -X "fabfile.*" -X "package" -X ".hg*" -p . "package/ea-utils_%s.tar.gz"' % (revision, version))
