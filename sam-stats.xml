@@ -36,17 +36,12 @@
         <exit_code range="1:" level="fatal" description="Unknown error occurred" />
     </stdio>
 
-    <!--
     <tests>
         <test>
-            <param name="read1" value="test_read1.fastq" />
-            <param name="read2" value="test_read3.fastq" />
-            <output name="outputJoined" file="testout.join.fastq" />
-            <output name="outputUnmatched1" file="testout.un1.fastq" />
-            <output name="outputUnmatched2" file="testout.un2.fastq" />
+            <param name="input" value="test.sam" />
+            <output name="samStats" file="testout.txt" />
         </test>
     </tests>
-    -->
 
     <help>
 Overview
