@@ -178,10 +178,6 @@ each exon as a feature, e.g., in order to check for alternative splicing. For
 comparative ChIP-Seq, the features might be binding regions from a pre-determined 
 list.
 
-**Paired-end Data MUST be sorted by QUERY NAME first**
-
-This tool requires that paired-end data be sorted by query name, which is NOT the default for Galaxy. Using the Picard Paired Read Mate Fixer with Query name sort FIRST is required for paired end data.
-
 
 Overlap Modes
 -------------
@@ -195,10 +191,12 @@ The following figure illustrates the effect of these three modes:
 .. image:: /static/images/count_modes.png
     :width: 500
 
+
 Strandedness
 ------------
 
 **Important**: The default for strandedness is yes. If your RNA-Seq data has not been made with a strand-specific protocol, this causes half of the reads to be lost. Hence, make sure to set the option Stranded to 'No' unless you have strand-specific data!
+
 
 Output
 ------
