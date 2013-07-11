@@ -1,0 +1,114 @@
+<tool id="infer_experiment" name="Infer Experiment">
+	<description>speculates how RNA-seq were configured</description>
+	<command interpreter="python"> /home/nilesh/RSeQC-2.3.3/scripts/infer_experiment.py -i $input -r $refgene 
+	
+		#if $sample_size.boolean
+			-s $sample_size.size
+		#end if
+	
+		> $output
+	</command>
+	<inputs>
+		<param name="input" type="data" format="bam,sam" label="Input BAM/SAM file" />
+		<param name="refgene" type="data" format="bed" label="Reference gene model in bed format" />
+		<conditional name="sample_size">
+			<param name="boolean" type="boolean" label="Modify usable sampled reads" value="false" />
+			<when value="true">
+				<param name="size" type="integer" label="Number of usable sampled reads (default = 200000)" value="200000" />
+			</when>
+		</conditional>
+	</inputs>
+	<outputs>
+		<data format="txt" name="output" />
+	</outputs>
+	<help>
+.. image:: https://code.google.com/p/rseqc/logo?cct=1336721062
+
+-----
+
+About RSeQC
++++++++++++
+
+The RSeQC package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. “Basic modules” quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while “RNA-seq specific modules” investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
+
+The RSeQC package is licensed under the GNU GPL v3 license.
+
+Inputs
+++++++++++++++
+
+Input BAM/SAM file
+	Alignment file in BAM/SAM format.
+
+Reference gene model
+	Gene model in BED format.
+
+Number of usable sampled reads (default=200000)
+	Number of usable reads sampled from SAM/BAM file. More reads will give more accurate estimation, but make program little slower.
+
+
+Output
+++++++++++++++
+This program is used to speculate how RNA-seq sequencing were configured, especially how reads were stranded for strand-specific RNA-seq data, through comparing reads' mapping information to the underneath gene model. Generally, strand specific RNA-seq data should be handled differently in both visualization and RPKM calculation.
+
+For pair-end RNA-seq, there are two different ways to strand reads:
+
+1) 1++,1--,2+-,2-+
+	- read1 mapped to '+' strand indicates parental gene on '+' strand
+	- read1 mapped to '-' strand indicates parental gene on '-' strand
+	- read2 mapped to '+' strand indicates parental gene on '-' strand
+	- read2 mapped to '-' strand indicates parental gene on '+' strand
+2) 1+-,1-+,2++,2--
+	- read1 mapped to '+' strand indicates parental gene on '-' strand
+	- read1 mapped to '-' strand indicates parental gene on '+' strand
+	- read2 mapped to '+' strand indicates parental gene on '+' strand
+    - read2 mapped to '-' strand indicates parental gene on '-' strand
+
+For single-end RNA-seq, there are also two different ways to strand reads:
+
+1) ++,--
+	-read mapped to '+' strand indicates parental gene on '+' strand
+	- read mapped to '-' strand indicates parental gene on '-' strand
+2) +-,-+
+	- read mapped to '+' strand indicates parental gene on '-' strand
+	- read mapped to '-' strand indicates parental gene on '+' strand
+
+Example Output
+++++++++++++++
+
+**Example1** ::
+
+	=========================================================
+	This is PairEnd Data ::
+
+	Fraction of reads explained by "1++,1--,2+-,2-+": 0.4992
+	Fraction of reads explained by "1+-,1-+,2++,2--": 0.5008
+	Fraction of reads explained by other combinations: 0.0000
+	=========================================================
+
+*Conclusion*: We can infer that this is NOT a strand specific because 50% of reads can be explained by "1++,1--,2+-,2-+", while the other 50% can be explained by "1+-,1-+,2++,2--".
+
+**Example2** ::
+
+	============================================================
+	This is PairEnd Data 
+
+	Fraction of reads explained by "1++,1--,2+-,2-+": 0.9644 ::
+	Fraction of reads explained by "1+-,1-+,2++,2--": 0.0356	
+	Fraction of reads explained by other combinations: 0.0000
+	============================================================
+	
+*Conclusion*: We can infer that this is a strand-specific RNA-seq data. strandness of read1 is consistent with that of gene model, while strandness of read2 is opposite to the strand of reference gene model.
+
+**Example3** ::
+
+	=========================================================
+	This is SingleEnd Data ::
+
+	Fraction of reads explained by "++,--": 0.9840 ::
+	Fraction of reads explained by "+-,-+": 0.0160
+	Fraction of reads explained by other combinations: 0.0000
+	=========================================================
+
+*Conclusion*: This is single-end, strand specific RNA-seq data. Strandness of reads are concordant with strandness of reference gene.
+	</help>
+</tool>
