@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="R" version="2.15.1">
+        <install version="1.0">
+            <actions>
+                <action type="download_by_url">http://CRAN.R-project.org/src/base/R-2/R-2.15.1.tar.gz</action>
+                <action type="shell_command">./configure --prefix=$INSTALL_DIR/lib</action>
+                <action type="shell_command">make</action>
+                <action type="move_file">
+                    <source>bin/R</source>
+                    <destination>$INSTALL_DIR/lib/bin</destination>
+                </action>
+                <action type="set_environment">
+                    <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+                </action>
+            </actions>
+        </install>
+        <readme>
+            You need a FORTRAN compiler or perhaps f2c in addition to a C compiler to build R.
+        </readme>
+    </package>
+    <package name="samtools" version="0.1.18">
+        <install version="1.0">
+            <actions>
+                <action type="download_by_url">http://sourceforge.net/projects/samtools/files/samtools/0.1.19/samtools-0.1.19.tar.bz2</action>
+                <action type="shell_command">make</action>
+                <action type="move_file">
+                    <source>samtools</source>
+                    <destination>$INSTALL_DIR/bin</destination>
+                </action>
+                <action type="move_file">
+                    <source>bcftools/bcftools</source>
+                    <destination>$INSTALL_DIR/bin</destination>
+                </action>
+                <action type="set_environment">
+                    <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+                </action>
+            </actions>
+        </install>
+        <readme>Both BCFTools and Samtools installed in this dependency.Compiling SAMtools requires the ncurses and zlib development libraries.</readme>
+    </package>
+    <package name="rseqc" version="2.3.7">
+        <install version = "1.0">
+            <actions>
+                <action type="download_by_url">http://sourceforge.net/projects/rseqc/files/RSeQC-2.3.7.tar.gz</action>
+                <action type="shell_command">python setup.py install --root $INSTALL_DIR/lib/rseqc</action>
+                <action type="set_environment">
+                    <environment_variable name="PYTHONPATH" action="prepend_to">$INSTALL_DIR/lib/rseqc/usr/local/lib/python2.7/site-packages
+                </action>
+                <action type="set_environment">
+                    <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/lib/rseqc/usr/local/bin</environment_variable>
+                </action>
+            </actions>
+        </install>
+        <readme>
+        	RSeQC version 2.3.7, documentation available at http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/rseqc/_build/html/index.html#.
+        </readme>
+    </package>
+    
+</tool_dependency>
