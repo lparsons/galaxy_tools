@@ -1,9 +1,10 @@
-<tool id="infer_experiment" name="Infer Experiment">
+<tool id="infer_experiment" name="Infer Experiment" version="1.1">
 	<description>speculates how RNA-seq were configured</description>
 	<requirements>
+		<requirement type="package" version="1.7.1">numpy</requirement>
 		<requirement type="package" version="2.3.7">rseqc</requirement>
 	</requirements>
-	<command interpreter="python"> infer_experiment.py -i $input -r $refgene 
+	<command> infer_experiment.py -i $input -r $refgene 
 	
 		#if $sample_size.boolean
 			-s $sample_size.size
@@ -24,17 +25,18 @@
 	<outputs>
 		<data format="txt" name="output" />
 	</outputs>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
+        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
+    </stdio>
 	<help>
-.. image:: https://code.google.com/p/rseqc/logo?cct=1336721062
+infer_experiment.py
++++++++++++++++++++
 
------
+This program is used to speculate how RNA-seq sequencing were configured, especially how
+reads were stranded for strand-specific RNA-seq data, through comparing reads' mapping
+information to the underneath gene model. 
 
-About RSeQC
-+++++++++++
-
-The RSeQC package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. “Basic modules” quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while “RNA-seq specific modules” investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
-
-The RSeQC package is licensed under the GNU GPL v3 license.
 
 Inputs
 ++++++++++++++
@@ -48,32 +50,38 @@ Reference gene model
 Number of usable sampled reads (default=200000)
 	Number of usable reads sampled from SAM/BAM file. More reads will give more accurate estimation, but make program little slower.
 
+Outputs
++++++++
 
-Output
-++++++++++++++
-This program is used to speculate how RNA-seq sequencing were configured, especially how reads were stranded for strand-specific RNA-seq data, through comparing reads' mapping information to the underneath gene model. Generally, strand specific RNA-seq data should be handled differently in both visualization and RPKM calculation.
+For pair-end RNA-seq, there are two different
+ways to strand reads (such as Illumina ScriptSeq protocol):
 
-For pair-end RNA-seq, there are two different ways to strand reads:
+1. 1++,1--,2+-,2-+
 
-1) 1++,1--,2+-,2-+
-	- read1 mapped to '+' strand indicates parental gene on '+' strand
-	- read1 mapped to '-' strand indicates parental gene on '-' strand
-	- read2 mapped to '+' strand indicates parental gene on '-' strand
-	- read2 mapped to '-' strand indicates parental gene on '+' strand
-2) 1+-,1-+,2++,2--
-	- read1 mapped to '+' strand indicates parental gene on '-' strand
-	- read1 mapped to '-' strand indicates parental gene on '+' strand
-	- read2 mapped to '+' strand indicates parental gene on '+' strand
-    - read2 mapped to '-' strand indicates parental gene on '-' strand
+* read1 mapped to '+' strand indicates parental gene on '+' strand
+* read1 mapped to '-' strand indicates parental gene on '-' strand
+* read2 mapped to '+' strand indicates parental gene on '-' strand
+* read2 mapped to '-' strand indicates parental gene on '+' strand
+
+2. 1+-,1-+,2++,2--
+
+* read1 mapped to '+' strand indicates parental gene on '-' strand
+* read1 mapped to '-' strand indicates parental gene on '+' strand
+* read2 mapped to '+' strand indicates parental gene on '+' strand
+* read2 mapped to '-' strand indicates parental gene on '-' strand
 
 For single-end RNA-seq, there are also two different ways to strand reads:
 
-1) ++,--
-	-read mapped to '+' strand indicates parental gene on '+' strand
-	- read mapped to '-' strand indicates parental gene on '-' strand
-2) +-,-+
-	- read mapped to '+' strand indicates parental gene on '-' strand
-	- read mapped to '-' strand indicates parental gene on '+' strand
+1. ++,--
+
+* read mapped to '+' strand indicates parental gene on '+' strand
+* read mapped to '-' strand indicates parental gene on '-' strand
+
+2. +-,-+
+
+* read mapped to '+' strand indicates parental gene on '-' strand
+* read mapped to '-' strand indicates parental gene on '+' strand
+
 
 Example Output
 ++++++++++++++
@@ -113,5 +121,21 @@ Example Output
 	=========================================================
 
 *Conclusion*: This is single-end, strand specific RNA-seq data. Strandness of reads are concordant with strandness of reference gene.
+
+
+-----
+
+About RSeQC 
++++++++++++
+
+The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
+
+The RSeQC package is licensed under the GNU GPL v3 license.
+
+.. image:: http://rseqc.sourceforge.net/_static/logo.png
+
+.. _RSeQC: http://rseqc.sourceforge.net/
+
+
 	</help>
 </tool>

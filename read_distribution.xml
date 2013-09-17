@@ -1,9 +1,10 @@
-<tool id="read_distribution" name="Read Distribution">
+<tool id="read_distribution" name="Read Distribution" version="1.1">
 	<description>calculates how mapped reads were distributed over genome feature</description>
 	<requirements>
+		<requirement type="package" version="1.7.1">numpy</requirement>
 		<requirement type="package" version="2.3.7">rseqc</requirement>
 	</requirements>
-	<command interpreter="python"> read_distribution.py -i $input -r $refgene > $output
+	<command> read_distribution.py -i $input -r $refgene > $output
 	</command>
 	<inputs>
 		<param name="input" type="data" format="bam,sam" label="input bam/sam file" />
@@ -12,17 +13,33 @@
 	<outputs>
 		<data format="txt" name="output" />
 	</outputs>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
+        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
+    </stdio>
 	<help>
-.. image:: https://code.google.com/p/rseqc/logo?cct=1336721062
+read_distribution.py
+++++++++++++++++++++
 
------
+Provided a BAM/SAM file and reference gene model, this module will calculate how mapped
+reads were distributed over genome feature (like CDS exon, 5'UTR exon, 3' UTR exon, Intron,
+Intergenic regions). When genome features are overlapped (e.g. a region could be annotated
+as both exon and intron by two different transcripts) , they are prioritize as:
+CDS exons > UTR exons > Introns > Intergenic regions, for example, if a read was mapped to
+both CDS exon and intron, it will be assigned to CDS exons.
 
-About RSeQC
-+++++++++++
+* "Total Reads": This does NOT include those QC fail,duplicate and non-primary hit reads
+* "Total Tags": reads spliced once will be counted as 2 tags, reads spliced twice will be counted as 3 tags, etc. And because of this, "Total Tags" >= "Total Reads"
+* "Total Assigned Tags": number of tags that can be unambiguously assigned the 10 groups (see below table).
+* Tags assigned to "TSS_up_1kb" were also assigned to "TSS_up_5kb" and "TSS_up_10kb", tags assigned to "TSS_up_5kb" were also assigned to "TSS_up_10kb". Therefore, "Total Assigned Tags" = CDS_Exons + 5'UTR_Exons + 3'UTR_Exons + Introns + TSS_up_10kb + TES_down_10kb.
+* When assign tags to genome features, each tag is represented by its middle point.
 
-The RSeQC package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. “Basic modules” quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while “RNA-seq specific modules” investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
+RSeQC cannot assign those reads that:
 
-The RSeQC package is licensed under the GNU GPL v3 license.
+* hit to intergenic regions that beyond region starting from TSS upstream 10Kb to TES downstream 10Kb.
+* hit to regions covered by both 5'UTR and 3' UTR. This is possible when two head-to-tail transcripts are overlapped in UTR regions.
+* hit to regions covered by both TSS upstream 10Kb and TES downstream 10Kb. 
+
 
 Inputs
 ++++++++++++++
@@ -36,33 +53,36 @@ Reference gene model
 Sample Output
 ++++++++++++++
 
-::
+Output:
 
-	Total Read: 44,826,454 ::
+===============     ============        ===========         ===========
+Group               Total_bases         Tag_count           Tags/Kb    
+===============     ============        ===========         ===========
+CDS_Exons           33302033            20002271            600.63     
+5'UTR_Exons         21717577            4408991             203.01     
+3'UTR_Exons         15347845            3643326             237.38     
+Introns             1132597354          6325392             5.58       
+TSS_up_1kb          17957047            215331              11.99      
+TSS_up_5kb          81621382            392296              4.81       
+TSS_up_10kb         149730983           769231              5.14       
+TES_down_1kb        18298543            266161              14.55      
+TES_down_5kb        78900674            729997              9.25       
+TES_down_10kb       140361190           896882              6.39       
+===============     ============        ===========         ===========
 
-	Total Tags: 50,023,249 ::
+-----
 
-	Total Assigned Tags: 36,057,402 ::
+About RSeQC 
++++++++++++
 
-	Group	Total_bases	Tag_count	Tags/Kb
-	CDS_Exons	33302033	20022538	601.24
-	5'UTR_Exons	21717577	4414913	203.29
-	3'UTR_Exons	15347845	3641689	237.28
-	Introns	1132597354	6312099	5.57
-	TSS_up_1kb	17957047	215220	11.99
-	TSS_up_5kb	81621382	392192	4.81
-	TSS_up_10kb	149730983	769210	5.14
-	TES_down_1kb	18298543	266157	14.55
-	TES_down_5kb	78900674	730072	9.25
-	TES_down_10kb	140361190	896953	6.39
+The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
 
-Note:
-- "Total Reads": This does NOT include those QC fail,duplicate and non-primary hit reads
-- "Total Tags": reads spliced once will be counted as 2 tags, reads spliced twice will be counted as 3 tags, etc. And because of this, "Total Fragments" >= "Total Reads"
-- "Total Assigned Tags": number of tags that can be unambiguously assigned the 10 groups (above table).
-- Tags assigned to "TSS_up_1kb" were also assigned to "TSS_up_5kb" and "TSS_up_10kb", tags assigned to "TSS_up_5kb" were also assigned to "TSS_up_10kb". Therefore, "Total Assigned Tags" = CDS_Exons + 5'UTR_Exons + 3'UTR_Exons + Introns + TSS_up_10kb + TES_down_10kb.
-- When assigning tags to genome features, each tag is represented by its middle point.
-- RSeQC cannot assign those reads that: 1) hit to intergenic regions that beyond region starting from TSS upstream 10Kb to TES downstream 10Kb. 2) hit to regions covered by both 5'UTR and 3' UTR. This is possible when two head-to-tail transcripts are overlapped in UTR regions. 3) hit to regions covered by both TSS upstream 10Kb and TES downstream 10Kb.
+The RSeQC package is licensed under the GNU GPL v3 license.
+
+.. image:: http://rseqc.sourceforge.net/_static/logo.png
+
+.. _RSeQC: http://rseqc.sourceforge.net/
+
 
 
 	</help>

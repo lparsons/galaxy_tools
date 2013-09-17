@@ -1,10 +1,11 @@
-<tool id="junction_saturation" name="Junction Saturation">
+<tool id="junction_saturation" name="Junction Saturation" version="1.1">
 	<description>detects splice junctions from each subset and compares them to reference gene model</description>
 	<requirements>
-		<requirement type="package" version="2.15.1">R</requirement>
+		<requirement type="package" version="2.11.0">R</requirement>
+		<requirement type="package" version="1.7.1">numpy</requirement>
 		<requirement type="package" version="2.3.7">rseqc</requirement>
 	</requirements>
-	<command interpreter="python"> junction_saturation.py -i $input -o output -r $refgene -m $intronSize -v $minSplice
+	<command> junction_saturation.py -i $input -o output -r $refgene -m $intronSize -v $minSplice
 
 		#if $percentiles.specifyPercentiles
 			-l $percentiles.lowBound -u $percentiles.upBound -s $percentiles.percentileStep
@@ -26,20 +27,26 @@
 		</conditional>
 	</inputs>
 	<outputs>
-		<data format="r" name="outputr" from_work_dir="output.junctionSaturation_plot.r"/>
-		<data format="pdf" name="outputpdf" from_work_dir="output.junctionSaturation_plot.pdf"/>
+		<data format="r" name="outputr" from_work_dir="output.junctionSaturation_plot.r" label="${tool.name} on ${on_string} (R Script)"/>
+		<data format="pdf" name="outputpdf" from_work_dir="output.junctionSaturation_plot.pdf" label="${tool.name} on ${on_string} (PDF)"/>
 	</outputs>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
+        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
+    </stdio>
 	<help>
-.. image:: https://code.google.com/p/rseqc/logo?cct=1336721062
+junction_saturation.py
+++++++++++++++++++++++
 
------
-
-About RSeQC
-+++++++++++
-
-The RSeQC package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. “Basic modules” quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while “RNA-seq specific modules” investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
-
-The RSeQC package is licensed under the GNU GPL v3 license.
+It's very important to check if current sequencing depth is deep enough to perform
+alternative splicing analyses. For a well annotated organism, the number of expressed genes
+in particular tissue is almost fixed so the number of splice junctions is also fixed. The fixed
+splice junctions can be predetermined from reference gene model. All (annotated) splice
+junctions should be rediscovered from a saturated RNA-seq data, otherwise, downstream
+alternative splicing analysis is problematic because low abundance splice junctions are
+missing. This module checks for saturation by resampling 5%, 10%, 15%, ..., 95% of total
+alignments from BAM or SAM file, and then detects splice junctions from each subset and
+compares them to reference gene model. 
 
 Inputs
 ++++++++++++++
@@ -65,9 +72,27 @@ Output
 1. output.junctionSaturation_plot.r: R script to generate plot
 2. output.junctionSaturation_plot.pdf
 
-.. image:: http://dldcc-web.brc.bcm.edu/lilab/liguow/RSeQC/figure/junction_saturation.png 
+.. image:: http://rseqc.sourceforge.net/_images/junction_saturation.png
+   :height: 600 px
+   :width: 600 px
+   :scale: 80 %    
 
 In this example, current sequencing depth is almost saturated for "known junction" (red line) detection because the number of "known junction" reaches a plateau. In other words, nearly all "known junctions" (expressed in this particular tissue) have already been detected, and continue sequencing will not detect additional "known junction" and will only increase junction coverage (i.e. junction covered by more reads). While current sequencing depth is not saturated for novel junctions (green).
+
+
+-----
+
+About RSeQC 
++++++++++++
+
+The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
+
+The RSeQC package is licensed under the GNU GPL v3 license.
+
+.. image:: http://rseqc.sourceforge.net/_static/logo.png
+
+.. _RSeQC: http://rseqc.sourceforge.net/
+
 
 
 	</help>

@@ -1,10 +1,11 @@
-<tool id="inner_distance" name="Inner Distance">
+<tool id="inner_distance" name="Inner Distance" version="1.1">
 	<description>calculate the inner distance (or insert size) between two paired RNA reads</description>
 	<requirements>
-		<requirement type="package" version="2.15.1">R</requirement>
+		<requirement type="package" version="2.11.0">R</requirement>
+		<requirement type="package" version="1.7.1">numpy</requirement>
 		<requirement type="package" version="2.3.7">rseqc</requirement>
 	</requirements>
-	<command interpreter="python"> inner_distance.py -i $input -o output -r $refgene
+	<command> inner_distance.py -i $input -o output -r $refgene
 
 		#if $bounds.hasLowerBound
 			-l $bounds.lowerBound
@@ -41,22 +42,30 @@
 		</conditional>
 	</inputs>
 	<outputs>
-		<data format="txt" name="outputtxt" from_work_dir="output.inner_distance.txt"/>
-		<data format="txt" name="outputfreqtxt" from_work_dir="output.inner_distance_freq.txt" />
-		<data format="pdf" name="outputpdf" from_work_dir="output.inner_distance_plot.pdf" />
-		<data format="r" name="outputr" from_work_dir="output.inner_distance_plot.r" />
+		<data format="txt" name="outputtxt" from_work_dir="output.inner_distance.txt" label="${tool.name} on ${on_string} (Text)"/>
+		<data format="txt" name="outputfreqtxt" from_work_dir="output.inner_distance_freq.txt" label="${tool.name} on ${on_string} (Freq Text)" />
+		<data format="pdf" name="outputpdf" from_work_dir="output.inner_distance_plot.pdf" label="${tool.name} on ${on_string} (PDF)" />
+		<data format="r" name="outputr" from_work_dir="output.inner_distance_plot.r" label="${tool.name} on ${on_string} (R Script)" />
 	</outputs>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
+        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
+    </stdio>
 	<help>
-.. image:: https://code.google.com/p/rseqc/logo?cct=1336721062
+inner_distance.py
++++++++++++++++++
 
------
+This module is used to calculate the inner distance (or insert size) between two paired RNA
+reads. The distance is the mRNA length between two paired fragments. We first determine the
+genomic (DNA) size between two paired reads: D_size = read2_start - read1_end, then
 
-About RSeQC
-+++++++++++
+* if two paired reads map to the same exon: inner distance = D_size
+* if two paired reads map to different exons:inner distance = D_size - intron_size
+* if two paired reads map non-exonic region (such as intron and intergenic region): inner distance = D_size
+* The inner_distance might be a negative value if two fragments were overlapped. 
 
-The RSeQC package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. “Basic modules” quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while “RNA-seq specific modules” investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
-
-The RSeQC package is licensed under the GNU GPL v3 license.
+NOTE: Not all read pairs were used to estimate the inner distance distribution. Those low
+quality, PCR duplication, multiple mapped reads were skipped. 
 
 Inputs
 ++++++++++++++
@@ -78,18 +87,36 @@ Output
 ++++++++++++++
 
 1. output.inner_distance.txt:
-- first column is read ID
--second column is inner distance. Could be negative value if PE reads were overlapped or mapping error (e.g. Read1_start < Read2_start, while Read1_end >> Read2_end due to spliced mapping of read1)
-- third column indicates how paired reads were mapped: PE_within_same_exon, PE_within_diff_exon,PE_reads_overlap
+    - first column is read ID
+    -second column is inner distance. Could be negative value if PE reads were overlapped or mapping error (e.g. Read1_start &lt; Read2_start, while Read1_end >> Read2_end due to spliced mapping of read1)
+    - third column indicates how paired reads were mapped: PE_within_same_exon, PE_within_diff_exon,PE_reads_overlap
 2. output..inner_distance_freq.txt:
-- inner distance starts
-- inner distance ends
-- number of read pairs
-- note the first 2 columns are left side half open interval
+    - inner distance starts
+    - inner distance ends
+    - number of read pairs
+    - note the first 2 columns are left side half open interval
 3. output.inner_distance_plot.r: R script to generate histogram
 4. output.inner_distance_plot.pdf: histogram plot
 
-.. image:: http://dldcc-web.brc.bcm.edu/lilab/liguow/RSeQC/figure/inner_distance.png
+.. image:: http://rseqc.sourceforge.net/_images/inner_distance.png
+   :height: 600 px
+   :width: 600 px
+   :scale: 80 %                        
+
+
+-----
+
+About RSeQC 
++++++++++++
+
+The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
+
+The RSeQC package is licensed under the GNU GPL v3 license.
+
+.. image:: http://rseqc.sourceforge.net/_static/logo.png
+
+.. _RSeQC: http://rseqc.sourceforge.net/
+
 
 	</help>
 </tool>

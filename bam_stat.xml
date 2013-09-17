@@ -1,12 +1,13 @@
-<tool id="bam_stat" name="BAM/SAM Mapping Stats">
+<tool id="bam_stat" name="BAM/SAM Mapping Stats" version="1.1">
 	<description>
 		reads mapping statistics for a provided BAM or SAM file.
 	</description>
 	<requirements>
+		<requirement type="package" version="1.7.1">numpy</requirement>
 		<requirement type="package" version="2.3.7">rseqc</requirement>
 	</requirements>s
-	<command interpreter="python">
-		bam_stat.py -i $input -q $mapqual > $output
+	<command>
+		bam_stat.py -i $input -q $mapqual 2> $output
 	</command>
 	<inputs>
 		<param name="input" type="data" label="Input .bam/.sam File" format="bam,sam" />
@@ -15,17 +16,19 @@
 	<outputs>
 		<data format="txt" name="output" />
 	</outputs>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
+        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
+    </stdio>
 	<help>
-.. image:: https://code.google.com/p/rseqc/logo?cct=1336721062
-
------
-
-About RSeQC
+bam_stat.py
 +++++++++++
 
-The RSeQC package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. “Basic modules” quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while “RNA-seq specific modules” investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
-
-The RSeQC package is licensed under the GNU GPL v3 license.
+This program is used to calculate reads mapping statistics from provided BAM
+file.  This script determines "uniquely mapped reads" from `mapping quality`_,
+which quality the probability that a read is misplaced (Do NOT confused with
+sequence quality, sequence quality measures the probability that a base-calling
+was wrong) .
 
 Inputs
 ++++++++++++++
@@ -44,6 +47,19 @@ Output
 - Uniquely mapped Reads = {Reads map to '+'} + {Reads map to '-'}
 - Uniquely mapped Reads = {Splice reads} + {Non-splice reads}
 
+-----
+
+About RSeQC 
++++++++++++
+
+The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
+
+The RSeQC package is licensed under the GNU GPL v3 license.
+
+.. image:: http://rseqc.sourceforge.net/_static/logo.png
+
+.. _RSeQC: http://rseqc.sourceforge.net/
+.. _`mapping quality`: http://genome.sph.umich.edu/wiki/Mapping_Quality_Scores
 
 	</help>
 </tool>
