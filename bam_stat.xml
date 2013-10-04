@@ -1,4 +1,4 @@
-<tool id="bam_stat" name="BAM/SAM Mapping Stats" version="1.1">
+<tool id="rseqc_bam_stat" name="BAM/SAM Mapping Stats" version="1.1">
 	<description>
 		reads mapping statistics for a provided BAM or SAM file.
 	</description>

@@ -1,4 +1,4 @@
-<tool id="junction_annotation" name="Junction Annotation" version="1.1">
+<tool id="rseqc_junction_annotation" name="Junction Annotation" version="1.1">
 	<description>compares detected splice junctions to reference gene model</description>
 	<requirements>
 		<requirement type="package" version="2.11.0">R</requirement>

@@ -1,4 +1,4 @@
-<tool id="inner_distance" name="Inner Distance" version="1.1">
+<tool id="rseqc_inner_distance" name="Inner Distance" version="1.1">
 	<description>calculate the inner distance (or insert size) between two paired RNA reads</description>
 	<requirements>
 		<requirement type="package" version="2.11.0">R</requirement>

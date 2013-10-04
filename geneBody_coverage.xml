@@ -1,4 +1,4 @@
-<tool id="geneBody_coverage" name="Gene Body Converage (BAM)" version="1.1">
+<tool id="rseqc_geneBody_coverage" name="Gene Body Converage (BAM)" version="1.1">
 	<description>
 		Read coverage over gene body.
 	</description>

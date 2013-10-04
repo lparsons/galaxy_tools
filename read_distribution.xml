@@ -1,4 +1,4 @@
-<tool id="read_distribution" name="Read Distribution" version="1.1">
+<tool id="rseqc_read_distribution" name="Read Distribution" version="1.1">
 	<description>calculates how mapped reads were distributed over genome feature</description>
 	<requirements>
 		<requirement type="package" version="1.7.1">numpy</requirement>
