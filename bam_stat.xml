@@ -1,26 +1,26 @@
 <tool id="rseqc_bam_stat" name="BAM/SAM Mapping Stats" version="1.1">
-	<description>
-		reads mapping statistics for a provided BAM or SAM file.
-	</description>
-	<requirements>
-		<requirement type="package" version="1.7.1">numpy</requirement>
-		<requirement type="package" version="2.3.7">rseqc</requirement>
-	</requirements>s
-	<command>
-		bam_stat.py -i $input -q $mapqual 2> $output
-	</command>
-	<inputs>
-		<param name="input" type="data" label="Input .bam/.sam File" format="bam,sam" />
-		<param label="Minimum mapping quality (default=30" type="integer" value="30" name="mapqual" />
-	</inputs>
-	<outputs>
-		<data format="txt" name="output" />
-	</outputs>
+    <description>
+        reads mapping statistics for a provided BAM or SAM file.
+    </description>
+    <requirements>
+        <requirement type="package" version="1.7.1">numpy</requirement>
+        <requirement type="package" version="2.3.7">rseqc</requirement>
+    </requirements>s
+    <command>
+        bam_stat.py -i $input -q $mapqual 2> $output
+    </command>
     <stdio>
         <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
         <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
     </stdio>
-	<help>
+    <inputs>
+        <param name="input" type="data" label="Input .bam/.sam File" format="bam,sam" />
+        <param label="Minimum mapping quality (default=30" type="integer" value="30" name="mapqual" />
+    </inputs>
+    <outputs>
+        <data format="txt" name="output" />
+    </outputs>
+    <help>
 bam_stat.py
 +++++++++++
 
@@ -61,5 +61,5 @@ The RSeQC package is licensed under the GNU GPL v3 license.
 .. _RSeQC: http://rseqc.sourceforge.net/
 .. _`mapping quality`: http://genome.sph.umich.edu/wiki/Mapping_Quality_Scores
 
-	</help>
+    </help>
 </tool>

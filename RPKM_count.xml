@@ -1,75 +1,75 @@
 <tool id="rseqc_RPKM_count" name="RPKM Count" version="1.1">
-	<description>calculates raw count and RPKM values for transcript at exon, intron, and mRNA level</description>
-	<requirements>
-		<requirement type="package" version="1.7.1">numpy</requirement>
-		<requirement type="package" version="2.3.7">rseqc</requirement>
-	</requirements>
+    <description>calculates raw count and RPKM values for transcript at exon, intron, and mRNA level</description>
+    <requirements>
+        <requirement type="package" version="1.7.1">numpy</requirement>
+        <requirement type="package" version="2.3.7">rseqc</requirement>
+    </requirements>
     <command>
         ln -s "${input}" "local_input.bam" &amp;&amp;
         ln -s "${input.metadata.bam_index}" "local_input.bam.bai" &amp;&amp;
         RPKM_count.py -i "local_input.bam" -o output -r $refgene
 
-		#if str($strand_type.strand_specific) == "pair"
-			-d
-			#if str($strand_type.pair_type) == "sd"
-				'1++,1--,2+-,2-+'
-			#else
-				'1+-,1-+,2++,2--'
-			#end if
-		#end if
+        #if str($strand_type.strand_specific) == "pair"
+            -d
+            #if str($strand_type.pair_type) == "sd"
+                '1++,1--,2+-,2-+'
+            #else
+                '1+-,1-+,2++,2--'
+            #end if
+        #end if
 
-		#if str($strand_type.strand_specific) == "single"
-			-d
-			#if str($strand_type.single_type) == "s"
-				'++,--'
-			#else
-				'+-,-+'
-			#end if
-		#end if
+        #if str($strand_type.strand_specific) == "single"
+            -d
+            #if str($strand_type.single_type) == "s"
+                '++,--'
+            #else
+                '+-,-+'
+            #end if
+        #end if
 
-		#if $skiphits
-			-u
-		#end if
+        #if $skiphits
+            -u
+        #end if
 
-		#if $onlyexonic
-			-e
-		#end if
+        #if $onlyexonic
+            -e
+        #end if
 
-	</command>
-	<inputs>
-		<param name="input" type="data" format="bam" label="input bam/sam file" />
-		<param name="refgene" type="data" format="bed" label="Reference gene model" />
-		<conditional name="strand_type">
-			<param name="strand_specific" type="select" label="Strand-specific?" value="None">
-				<option value="none">None</option>
-				<option value="pair">Pair-End RNA-seq</option>
-				<option value="single">Single-End RNA-seq</option>
-			</param>
-			<when value="pair">
-				<param name="pair_type" type="select" display="radio" label="Pair-End Read Type (format: mapped --> parent)" value="sd">
-					<option value="sd"> read1 (positive --> positive; negative --> negative), read2 (positive --> negative; negative --> positive)</option>
-					<option value="ds">read1 (positive --> negative; negative --> positive), read2 (positive --> positive; negative --> negative)</option>
-				</param>
-			</when>
-			<when value="single">
-				<param name="single_type" type="select" display="radio" label="Single-End Read Type (format: mapped --> parent)" value="s">
-					<option value="s">positive --> positive; negative --> negative</option>
-					<option value="d">positive --> negative; negative --> positive</option>
-				</param>
-			</when>
-			<when value="none"></when>
-		</conditional>
-		<param name="skiphits" type="boolean" value="false" label="Skip Multiple Hit Reads" />
-		<param name="onlyexonic" type="boolean" value="false" label="Only use exonic (UTR exons and CDS exons) reads, otherwise use all reads" />
-	</inputs>
-	<outputs>
-		<data format="xls" name="outputxls" from_work_dir="output_read_count.xls"/>
-	</outputs>
+    </command>
     <stdio>
         <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
         <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
     </stdio>
-	<help>
+    <inputs>
+        <param name="input" type="data" format="bam" label="input bam/sam file" />
+        <param name="refgene" type="data" format="bed" label="Reference gene model" />
+        <conditional name="strand_type">
+            <param name="strand_specific" type="select" label="Strand-specific?" value="None">
+                <option value="none">None</option>
+                <option value="pair">Pair-End RNA-seq</option>
+                <option value="single">Single-End RNA-seq</option>
+            </param>
+            <when value="pair">
+                <param name="pair_type" type="select" display="radio" label="Pair-End Read Type (format: mapped --> parent)" value="sd">
+                    <option value="sd"> read1 (positive --> positive; negative --> negative), read2 (positive --> negative; negative --> positive)</option>
+                    <option value="ds">read1 (positive --> negative; negative --> positive), read2 (positive --> positive; negative --> negative)</option>
+                </param>
+            </when>
+            <when value="single">
+                <param name="single_type" type="select" display="radio" label="Single-End Read Type (format: mapped --> parent)" value="s">
+                    <option value="s">positive --> positive; negative --> negative</option>
+                    <option value="d">positive --> negative; negative --> positive</option>
+                </param>
+            </when>
+            <when value="none"></when>
+        </conditional>
+        <param name="skiphits" type="boolean" value="false" label="Skip Multiple Hit Reads" />
+        <param name="onlyexonic" type="boolean" value="false" label="Only use exonic (UTR exons and CDS exons) reads, otherwise use all reads" />
+    </inputs>
+    <outputs>
+        <data format="xls" name="outputxls" from_work_dir="output_read_count.xls"/>
+    </outputs>
+    <help>
 RPKM_count.py
 +++++++++++++
 
@@ -83,22 +83,22 @@ Inputs
 ++++++++++++++
 
 Input BAM/SAM file
-	Alignment file in BAM/SAM format.
+    Alignment file in BAM/SAM format.
 
 Reference gene model
-	Gene model in BED format.
+    Gene model in BED format.
 
 Strand sequencing type (default=none)
-	See Infer Experiment tool if uncertain.
+    See Infer Experiment tool if uncertain.
 
 Options
 ++++++++++++++
 
 Skip Multiple Hit Reads
-	Use Multiple hit reads or use only uniquely mapped reads.
+    Use Multiple hit reads or use only uniquely mapped reads.
 
 Only use exonic reads 
-	Renders program only used exonic (UTR exons and CDS exons) reads, otherwise use all reads.
+    Renders program only used exonic (UTR exons and CDS exons) reads, otherwise use all reads.
 
 Sample Output
 ++++++++++++++
@@ -113,7 +113,7 @@ chr1    29213602   29213722   NM_001166007_exon_1      0      '+'             16
 chr1    29313959   29314417   NM_001166007_exon_2      0      '+'            1699            4               74.158    0.175
 chr1    29319841   29320054   NM_001166007_exon_3      0      '+'             528             1               49.554    0.094
 =====   ========   ========   =====================    =====  ===========   =============   =============   ========  =========
-	
+    
 -----
 
 About RSeQC 
@@ -128,5 +128,5 @@ The RSeQC package is licensed under the GNU GPL v3 license.
 .. _RSeQC: http://rseqc.sourceforge.net/
 
 
-	</help>
+    </help>
 </tool>

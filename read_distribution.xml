@@ -1,23 +1,24 @@
 <tool id="rseqc_read_distribution" name="Read Distribution" version="1.1">
-	<description>calculates how mapped reads were distributed over genome feature</description>
-	<requirements>
-		<requirement type="package" version="1.7.1">numpy</requirement>
-		<requirement type="package" version="2.3.7">rseqc</requirement>
-	</requirements>
-	<command> read_distribution.py -i $input -r $refgene > $output
-	</command>
-	<inputs>
-		<param name="input" type="data" format="bam,sam" label="input bam/sam file" />
-		<param name="refgene" type="data" format="bed" label="reference gene model" />
-	</inputs>
-	<outputs>
-		<data format="txt" name="output" />
-	</outputs>
+    <description>calculates how mapped reads were distributed over genome feature</description>
+    <requirements>
+        <requirement type="package" version="1.7.1">numpy</requirement>
+        <requirement type="package" version="2.3.7">rseqc</requirement>
+    </requirements>
+    <command>
+        read_distribution.py -i $input -r $refgene > $output
+    </command>
     <stdio>
         <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
         <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
     </stdio>
-	<help>
+    <inputs>
+        <param name="input" type="data" format="bam,sam" label="input bam/sam file" />
+        <param name="refgene" type="data" format="bed" label="reference gene model" />
+    </inputs>
+    <outputs>
+        <data format="txt" name="output" />
+    </outputs>
+    <help>
 read_distribution.py
 ++++++++++++++++++++
 
@@ -45,10 +46,10 @@ Inputs
 ++++++++++++++
 
 Input BAM/SAM file
-	Alignment file in BAM/SAM format.
+    Alignment file in BAM/SAM format.
 
 Reference gene model
-	Gene model in BED format.
+    Gene model in BED format.
 
 Sample Output
 ++++++++++++++
@@ -85,5 +86,5 @@ The RSeQC package is licensed under the GNU GPL v3 license.
 
 
 
-	</help>
+    </help>
 </tool>

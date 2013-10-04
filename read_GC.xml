@@ -1,25 +1,26 @@
 <tool id="rseqc_read_GC" name="Read GC" version="1.1">
-	<description>determines GC% and read count</description>
-	<requirements>
-		<requirement type="package" version="2.11.0">R</requirement>
-		<requirement type="package" version="1.7.1">numpy</requirement>
-		<requirement type="package" version="2.3.7">rseqc</requirement>
-	</requirements>
-	<command> read_GC.py -i $input -o output
-	</command>
-	<inputs>
-		<param name="input" type="data" format="bam,sam" label="input bam/sam file" />
-	</inputs>
-	<outputs>
-		<data format="xls" name="outputxls" from_work_dir="output.GC.xls" label="${tool.name} on ${on_string} (XLS)"/>
-		<data format="r" name="outputr" from_work_dir="output.GC_plot.r" label="${tool.name} on ${on_string} (R Script)" />
-		<data format="pdf" name="outputpdf" from_work_dir="output.GC_plot.pdf" label="${tool.name} on ${on_string} (PDF)" />
-	</outputs>
+    <description>determines GC% and read count</description>
+    <requirements>
+        <requirement type="package" version="2.11.0">R</requirement>
+        <requirement type="package" version="1.7.1">numpy</requirement>
+        <requirement type="package" version="2.3.7">rseqc</requirement>
+    </requirements>
+    <command>
+        read_GC.py -i $input -o output
+    </command>
     <stdio>
         <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
         <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
     </stdio>
-	<help>
+    <inputs>
+        <param name="input" type="data" format="bam,sam" label="input bam/sam file" />
+    </inputs>
+    <outputs>
+        <data format="xls" name="outputxls" from_work_dir="output.GC.xls" label="${tool.name} on ${on_string} (XLS)"/>
+        <data format="txt" name="outputr" from_work_dir="output.GC_plot.r" label="${tool.name} on ${on_string} (R Script)" />
+        <data format="pdf" name="outputpdf" from_work_dir="output.GC_plot.pdf" label="${tool.name} on ${on_string} (PDF)" />
+    </outputs>
+    <help>
 read_GC.py
 ++++++++++
 
@@ -28,7 +29,7 @@ Inputs
 ++++++++++++++
 
 Input BAM/SAM file
-	Alignment file in BAM/SAM format.
+    Alignment file in BAM/SAM format.
 
 Output
 ++++++++++++++
@@ -56,5 +57,5 @@ The RSeQC package is licensed under the GNU GPL v3 license.
 .. _RSeQC: http://rseqc.sourceforge.net/
 
 
-	</help>
+    </help>
 </tool>
