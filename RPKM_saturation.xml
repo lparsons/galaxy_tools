@@ -1,7 +1,7 @@
 <tool id="rseqc_RPKM_saturation" name="RPKM Saturation" version="1.1">
     <description>calculates raw count and RPKM values for transcript at exon, intron, and mRNA level</description>
     <requirements>
-        <requirement type="package" version="2.11.0">R</requirement>
+        <requirement type="package" version="3.0.1">R</requirement>
         <requirement type="package" version="1.7.1">numpy</requirement>
         <requirement type="package" version="2.3.7">rseqc</requirement>
     </requirements>
