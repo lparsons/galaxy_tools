@@ -19,7 +19,7 @@
         </install>
         <readme>
             RSeQC version 2.3.7, documentation available at http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/rseqc/_build/html/index.html.
-            Requires gcc and python.
+            Requires gcc and python 2.7.
         </readme>
     </package>
 
