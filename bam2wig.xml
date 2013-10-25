@@ -8,15 +8,12 @@
         <requirement type="package" version="2.3.7">rseqc</requirement>
     </requirements>
     <command>
+        tmp_input_name=\$(mktemp -u);
+        bai='.bai';
 
-        #import tempfile, os
-        #set $tmp_input = tempfile.NamedTemporaryFile()
-        #set $tmp_input_name = $input_singles_tmp_handle.name
-        #silent $tmp_input.close()
-
-        ln -s "${input}" $tmp_input_name &amp;&amp;
-        ln -s "${input.metadata.bam_index}" $tmp_input_name + ".bai" &amp;&amp;
-        bam2wig.py -i "local_input.bam" -s $chromsize -o outfile
+        ln -s "${input}" \$tmp_input_name &amp;&amp;
+        ln -s "${input.metadata.bam_index}" \$tmp_input_name\$bai &amp;&amp;
+        bam2wig.py -i \$tmp_input_name -s $chromsize -o outfile
 
         #if str($strand_type.strand_specific) == "pair"
             -d
@@ -44,8 +41,8 @@
             -u
         #end if
         ;
-        rm $tmp_input_name + ".bai" ;
-        rm $tmp_input_name
+        rm "\$tmp_input_name\$bai";
+        rm \$tmp_input_name
     </command>
     <inputs>
         <param name="input" type="data" label="Input .bam File" format="bam" />
