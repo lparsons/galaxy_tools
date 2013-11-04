@@ -1,10 +1,10 @@
-<tool id="htseq_count" name="htseq-count" version="0.3.1">
+<tool id="htseq_count" name="htseq-count" version="0.3.2">
     <description> - Count aligned reads in a BAM file that overlap features in a GFF file</description>
     <version_command>htseq-count -h | grep version | sed 's/^\(.*\)*\(version .*\)\./\2/'</version_command>
     <requirements>
-        <requirement type="package" version="1.6.2">numpy</requirement>
-        <requirement type="package" version="0.5.4p1">htseq</requirement>
-        <requirement type="package" version="0.1.18">samtools</requirement>
+        <requirement type="package" version="1.7.1">numpy</requirement>
+        <requirement type="package" version="0.5.4p5">htseq</requirement>
+        <requirement type="package" version="0.1.19">samtools</requirement>
         <requirement type="package" version="1.56.0">picard</requirement> 
     </requirements>
     <command>
@@ -188,7 +188,7 @@ The htseq-count script allows to choose between three modes: *union*, *intersect
 
 The following figure illustrates the effect of these three modes:
 
-.. image:: /static/images/count_modes.png
+.. image:: $PATH_TO_IMAGES/count_modes.png
     :width: 500
 
 
