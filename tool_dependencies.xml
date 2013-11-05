@@ -17,6 +17,12 @@
         <install version="1.0">
             <actions>
                 <action type="download_by_url">https://pypi.python.org/packages/source/H/HTSeq/HTSeq-0.5.4p5.tar.gz</action>
+                <!-- populate the environment variables from the dependend repos -->
+                <action type="set_environment_for_install">
+                    <repository name="package_numpy_1_7" owner="iuc">
+                        <package name="numpy" version="1.7.1" />
+                   </repository>
+                </action>
                 <action type="make_directory">$INSTALL_DIR/lib/python</action> <!-- Not sure why these must be made apriori, but install fails otherwise -->
                 <action type="make_directory">$INSTALL_DIR/lib64/python</action> <!-- Not sure why these must be made apriori, but install fails otherwise -->
                 <action type="shell_command">export PYTHONPATH=$PYTHONPATH:$INSTALL_DIR/lib/python:$INSTALL_DIR/lib64/python &amp;&amp; python setup.py install --home $INSTALL_DIR --install-scripts $INSTALL_DIR/bin</action>
