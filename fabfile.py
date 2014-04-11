@@ -21,6 +21,6 @@ def package():
     local('mkdir -p %s' % package_dir)
     local('rm -f %s' % version_filename)
     if version == 'test':
-        local('tar czvf %s --exclude "fabfile.*" --exclude "%s" --exclude ".hg*" *' % (version_filename, package_dir))
+        local('tar czvf %s --exclude "fabfile.*" --exclude "%s" --exclude ".hg*" --exclude ".DS_Store" --exclude "*.pyc" --exclude "*.swp" *' % (version_filename, package_dir))
     else:
         local('hg archive -t tgz %s -X "fabfile.*" -X "package" -X ".hg*" -p . "%s"' % (revision_option, version_filename))

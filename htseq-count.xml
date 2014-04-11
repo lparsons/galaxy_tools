@@ -165,8 +165,7 @@ The htseq-count script allows to choose between three modes: *union*, *intersect
 
 The following figure illustrates the effect of these three modes:
 
-.. image:: $PATH_TO_IMAGES/count_modes.png
-    :width: 500
+.. image:: count_modes.png
 
 
 Strandedness
