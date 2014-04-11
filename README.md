@@ -9,7 +9,7 @@ script from python
 Installation
 ------------
 
-Installtion directly from the [Galaxy
+Installation directly from the [Galaxy
 Toolshed](http://toolshed.g2.bx.psu.edu/view/lparsons/htseq_count) is
 recommended.
 
@@ -24,7 +24,7 @@ Repository-Development: <https://bitbucket.org/lance_parsons/htseq_count_galaxy_
 License
 -------
 
-Copyright (c) 2012-2013, Lance R. Parsons <lparsons@princeton.edu>  
+Copyright (c) 2012-2014, Lance R. Parsons <lparsons@princeton.edu>  
 All rights reserved.
 
 Licensed under the BSD 2-Clause License: <http://opensource.org/licenses/BSD-2-Clause>

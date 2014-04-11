@@ -1,11 +1,10 @@
-<tool id="htseq_count" name="htseq-count" version="0.3.2">
+<tool id="htseq_count" name="htseq-count" version="0.4">
     <description> - Count aligned reads in a BAM file that overlap features in a GFF file</description>
     <version_command>htseq-count -h | grep version | sed 's/^\(.*\)*\(version .*\)\./\2/'</version_command>
     <requirements>
         <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="0.5.4p5">htseq</requirement>
+        <requirement type="package" version="0.6.1">htseq</requirement>
         <requirement type="package" version="0.1.19">samtools</requirement>
-        <requirement type="package" version="1.56.0">picard</requirement> 
     </requirements>
     <command>
     ##set up input files
@@ -18,18 +17,9 @@
             #set $reference_fasta_filename = str( $samout_conditional.reference_source.ref_file.fields.path )
         #end if
     #end if
-    #if str($singlepaired) == "paired":
-        ln -s $samfile local_input.sam &amp;&amp;
-        java -Xmx2G -jar "\$JAVA_JAR_PATH/SortSam.jar" VALIDATION_STRINGENCY=LENIENT SORT_ORDER=queryname O=prepared_input.sam I=local_input.sam TMP_DIR="${__new_file_path__}" 
-        || echo "Error running Picard MergeSamFiles" &gt;&amp;2 &amp;&amp;
-    #else:
-        #if $samfile.extension == "bam":
-            samtools view $samfile | 
-        #else
-            ln -s $samfile prepared_input.sam &amp;&amp;
-        #end if
-    #end if
     htseq-count 
+    --format=$samfile.extension
+    --order=pos
     --mode=$mode 
     --stranded=$stranded 
     --minaqual=$minaqual 
@@ -38,27 +28,14 @@
     #if $samout_conditional.samout:
         --samout=$__new_file_path__/${samoutfile.id}_tmp
     #end if
-    #if str($singlepaired) == "paired":
-        prepared_input.sam
-    #else:
-        #if $samfile.extension == "bam":
-            - 
-        #else:
-            prepared_input.sam
-        #end if
-    #end if    
+    $samfile
     $gfffile 
     | awk '{if ($1 ~ "no_feature|ambiguous|too_low_aQual|not_aligned|alignment_not_unique") print $0 | "cat 1>&amp;2"; else print $0}' &gt; $counts 2&gt;$othercounts
     #if $samout_conditional.samout:
         &amp;&amp; samtools view -Su -t ${reference_fasta_filename}.fai $__new_file_path__/${samoutfile.id}_tmp | samtools sort -o - sorted > $samoutfile
     #end if</command>
     <inputs>
-        <param format="sam, bam" name="samfile" type="data" label="Aligned SAM/BAM File"/>
-        <param name="singlepaired" type="select" label="Is this library mate-paired?">
-            <help>Paired libraries will be sorted by read name prior to counting.</help>
-            <option value="single" selected="true">single-end</option>
-            <option value="paired">paired-end</option>
-        </param>
+        <param format="sam,bam" name="samfile" type="data" label="Aligned SAM/BAM File"/>
         <param format="gff" name="gfffile" type="data" label="GFF File"/>
         <param name="mode" type="select" label="Mode">
             <help>Mode to handle reads overlapping more than one feature.</help>
@@ -72,7 +49,7 @@
             <option value="no">No</option>
             <option value="reverse">Reverse</option>
         </param>
-        <param name="minaqual" type="integer" value="0" label="Minimum alignment quality">
+        <param name="minaqual" type="integer" value="10" label="Minimum alignment quality">
             <help>Skip all reads with alignment quality lower than the given minimum value</help>
         </param>
         <param name="featuretype" type="text" value="exon" label="Feature type">
