@@ -5,7 +5,7 @@
     <requirements>
         <requirement type="package" version="3.0.1">R</requirement>
         <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.3.7">rseqc</requirement>
+        <requirement type="package" version="2.3.9">rseqc</requirement>
     </requirements>
     <command>
         geneBody_coverage.py -i $input -r $refgene -o output

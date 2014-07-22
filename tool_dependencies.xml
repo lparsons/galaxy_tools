@@ -6,23 +6,8 @@
     <package name="numpy" version="1.7.1">
         <repository name="package_numpy_1_7" owner="iuc" />
     </package>
-    <package name="rseqc" version="2.3.7">
-        <install version = "1.0">
-            <actions>
-                <action type="make_directory">$INSTALL_DIR/lib/python</action> <!-- Not sure why these must be made apriori, but install fails otherwise -->
-                <action type="make_directory">$INSTALL_DIR/lib64/python</action> <!-- Not sure why these must be made apriori, but install fails otherwise -->
-                <action type="download_by_url">http://sourceforge.net/projects/rseqc/files/RSeQC-2.3.7.tar.gz</action>
-                <action type="shell_command">export PYTHONPATH=$PYTHONPATH:$INSTALL_DIR/lib/python &amp;&amp; python setup.py install --install-lib $INSTALL_DIR/lib/python --install-scripts $INSTALL_DIR/bin</action>
-                <action type="set_environment">
-                    <environment_variable name="PYTHONPATH" action="prepend_to">$INSTALL_DIR/lib/python</environment_variable>
-                    <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
-                </action>
-            </actions>
-        </install>
-        <readme>
-            RSeQC version 2.3.7, documentation available at http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/rseqc/_build/html/index.html.
-            Requires gcc and python 2.7.
-        </readme>
+    <package name="rseqc" version="2.3.9">
+        <repository name="package_rseqc_2_3_9" owner="lparsons" />
     </package>
 
 </tool_dependency>

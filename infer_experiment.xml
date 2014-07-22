@@ -2,7 +2,7 @@
     <description>speculates how RNA-seq were configured</description>
     <requirements>
         <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.3.7">rseqc</requirement>
+        <requirement type="package" version="2.3.9">rseqc</requirement>
     </requirements>
     <command>
         infer_experiment.py -i $input -r $refgene 

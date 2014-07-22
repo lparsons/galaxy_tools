@@ -1,9 +1,9 @@
-<tool id="rseqc_junction_saturation" name="Junction Saturation" version="1.1">
+<tool id="rseqc_junction_saturation" name="Junction Saturation" version="2.3.9">
     <description>detects splice junctions from each subset and compares them to reference gene model</description>
     <requirements>
         <requirement type="package" version="3.0.1">R</requirement>
         <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.3.7">rseqc</requirement>
+        <requirement type="package" version="2.3.9">rseqc</requirement>
     </requirements>
     <command> junction_saturation.py -i $input -o output -r $refgene -m $intronSize -v $minSplice
 
