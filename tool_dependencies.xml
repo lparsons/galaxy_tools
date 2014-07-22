@@ -9,6 +9,8 @@
     <package name="rseqc" version="2.3.7">
         <install version = "1.0">
             <actions>
+                <action type="make_directory">$INSTALL_DIR/lib/python</action> <!-- Not sure why these must be made apriori, but install fails otherwise -->
+                <action type="make_directory">$INSTALL_DIR/lib64/python</action> <!-- Not sure why these must be made apriori, but install fails otherwise -->
                 <action type="download_by_url">http://sourceforge.net/projects/rseqc/files/RSeQC-2.3.7.tar.gz</action>
                 <action type="shell_command">export PYTHONPATH=$PYTHONPATH:$INSTALL_DIR/lib/python &amp;&amp; python setup.py install --install-lib $INSTALL_DIR/lib/python --install-scripts $INSTALL_DIR/bin</action>
                 <action type="set_environment">
