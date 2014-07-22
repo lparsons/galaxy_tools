@@ -20,5 +20,5 @@ The galaxy wrapper code was written by
     Nilesh Kavthekar, School of Engineering and Applied Sciences, University of Pennsylvania, Class of 2016
 Modified by 
     Lance Parsons, Lewis-Sigler Institute for Integrative Genomics, Princeton University,
-    Björn Grüning, University of Freiburg, bjoern.gruening@gmail.com
+    Bjorn Gruning, University of Freiburg, bjoern.gruening@gmail.com
 The development of the wrapper code is housed on BitBucket at: https://bitbucket.org/lance_parsons/rseqc_galaxy_wrapper
