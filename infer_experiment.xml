@@ -1,4 +1,4 @@
-<tool id="rseqc_infer_experiment" name="Infer Experiment" version="1.1">
+<tool id="rseqc_infer_experiment" name="Infer Experiment" version="2.3.9">
     <description>speculates how RNA-seq were configured</description>
     <requirements>
         <requirement type="package" version="1.7.1">numpy</requirement>
