@@ -23,14 +23,14 @@ Optional steps to setup and run Galaxy functional tests
 4 - Copy test-data/* to $GALAXY_HOME/test-data/
 5 - Set GALAXY_TEST_TOOL_CONF environment variable to a tool_conf.xml file that
     contains the tools you want to test. (e.g. 'tool_conf.xml')
-6 - $GALAXY_HOME/run_functional_tests.sh -id cutadapt 
+6 - $GALAXY_HOME/run_functional_tests.sh -id cutadapt
     See the Galaxy Wiki for more information: http://wiki.g2.bx.psu.edu/
 
 
 Configuration of Adapters
 -------------------------
 
-A list of predefined adapters may be specified in the fastx_clipper_sequences.txt
+A list of predefined adapters may be specified in the cutadapt_adapters.txt
 file which resides in the tool-data directory underneath the Galaxy root.  A sample
 file is provided.
 
@@ -38,5 +38,7 @@ file is provided.
 Limitations
 -----------
 
+Paired output is not supported
 Colorspace data support is not implemented
 Name adapters support is not implemented
+Only one "Strip suffix" is suppored
