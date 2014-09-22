@@ -1,8 +1,8 @@
 Galaxy tool definition for cutadapt (http://code.google.com/p/cutadapt/)
 
 
-Installation  - Tool Shed
----------------------------
+Installation - Tool Shed
+------------------------
 
 The recommended way to install cutadapt as a tool in Galaxy is to the use the
 Galaxy Tool Shed (http://wiki.galaxyproject.org/Tool%20Shed).
@@ -35,10 +35,9 @@ file which resides in the tool-data directory underneath the Galaxy root.  A sam
 file is provided.
 
 
-Limitations
------------
+Limitations of the Galaxy wrapper
+---------------------------------
 
-Paired output is not supported
+Reading adapters from a fasta file is not supported
 Colorspace data support is not implemented
-Name adapters support is not implemented
 Only one "Strip suffix" is suppored

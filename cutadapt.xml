@@ -124,9 +124,9 @@
     <inputs>
         <param format="fastq, fastqsanger, fastqillumina, fastqsolexa, fasta" name="input" type="data" optional="false" label="Fastq file to trim" length="100"/>
         <conditional name="paired_end">
-            <param name="paired_end_boolean" type="boolean" value="false" label="Paired End Reads" />
+            <param name="paired_end_boolean" type="boolean" value="false" label="Track Paired Reads" help="This option will keep a second file synchronized if you use one of the filtering options that discards reads. It will NOT trim adapters off of the second read. You must run Cutadapt a second time on the output of the first run to trim adapters from both reads (see Cutadapt documentation for details)." />
             <when value="true">
-                <param format="fastq, fastqsanger, fastqillumina, fastqsolexa, fasta" name="input2" type="data" optional="false" label="Paired fastq file" length="100"/>
+                <param format="fastq, fastqsanger, fastqillumina, fastqsolexa, fasta" name="input2" type="data" optional="false" label="Paired fastq file (NOT trimmed)" length="100"/>
             </when>
         </conditional>
 
@@ -351,7 +351,9 @@ sequencing data. This is usually necessary when the read length of the
 machine is longer than the molecule that is sequenced, such as in
 microRNA data.
 
-The tool is based on the opensource cutadapt_ tool.
+The tool is based on the opensource `cutadapt 
+&lt;http://code.google.com/p/cutadapt/>`_ tool. See the `complete cutadapt
+documentation &lt;https://cutadapt.readthedocs.org/en/latest/index.html>`_ for additional details.
 
 -----
 
