@@ -166,7 +166,7 @@
                 </when>
                 <when value="prebuilt">
                     <param name="anywhere_adapter" type="select" label="Choose 5' or 3' adapter">
-                        <options from_file="fastx_clipper_sequences.txt">
+                        <options from_file="cutadapt_adapters.txt">
                             <column name="name" index="1"/>
                             <column name="value" index="0"/>
                         </options>
@@ -188,7 +188,7 @@
                 </when>
                 <when value="prebuilt">
                     <param name="front_adapter" type="select" label="Choose 5' adapter">
-                        <options from_file="fastx_clipper_sequences.txt">
+                        <options from_file="cutadapt_adapters.txt">
                             <column name="name" index="1"/>
                             <column name="value" index="0"/>
                         </options>
