@@ -41,3 +41,8 @@ Limitations of the Galaxy wrapper
 Reading adapters from a fasta file is not supported
 Colorspace data support is not implemented
 Only one "Strip suffix" is suppored
+
+Galaxy Wrapper Development
+--------------------------
+Author: Lance Parsons <lparsons@princeton.edu>
+Repository: https://bitbucket.org/lance_parsons/cutadapt_galaxy_wrapper
