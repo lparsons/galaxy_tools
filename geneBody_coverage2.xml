@@ -1,11 +1,11 @@
-<tool id="rseqc_geneBody_coverage2" name="Gene Body Converage (Bigwig)" version="2.3.9">
+<tool id="rseqc_geneBody_coverage2" name="Gene Body Converage (Bigwig)" version="2.4">
     <description>
         Read coverage over gene body
     </description>
     <requirements>
-        <requirement type="package" version="3.0.1">R</requirement>
+        <requirement type="package" version="3.0.3">R</requirement>
         <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.3.9">rseqc</requirement>
+        <requirement type="package" version="2.4">rseqc</requirement>
     </requirements>
     <command>
         geneBody_coverage2.py -i $input -r $refgene -o output

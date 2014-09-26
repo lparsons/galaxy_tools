@@ -1,9 +1,9 @@
-<tool id="rseqc_read_GC" name="Read GC" version="2.3.9">
+<tool id="rseqc_read_GC" name="Read GC" version="2.4">
     <description>determines GC% and read count</description>
     <requirements>
-        <requirement type="package" version="3.0.1">R</requirement>
+        <requirement type="package" version="3.0.3">R</requirement>
         <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.3.9">rseqc</requirement>
+        <requirement type="package" version="2.4">rseqc</requirement>
     </requirements>
     <command>
         read_GC.py -i $input -o output

@@ -1,10 +1,10 @@
-<tool id="rseqc_bam_stat" name="BAM/SAM Mapping Stats" version="2.3.9">
+<tool id="rseqc_bam_stat" name="BAM/SAM Mapping Stats" version="2.4">
     <description>
         reads mapping statistics for a provided BAM or SAM file.
     </description>
     <requirements>
         <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.3.9">rseqc</requirement>
+        <requirement type="package" version="2.4">rseqc</requirement>
     </requirements>s
     <command>
         bam_stat.py -i $input -q $mapqual 2> $output
