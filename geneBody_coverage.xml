@@ -9,14 +9,14 @@
     </requirements>
     <command>
         #set $safename = ''.join(c in '_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' and c or '_' for c in $input.display_name)
-        #set $fname = "dataset_1_" + str($safename) + ".bam"
+        #set $fname = "d1_" + str($safename) + ".bam"
         ln -s '${input}' '${fname}' &amp;&amp;
         ln -s '${input.metadata.bam_index}' '${fname}.bai' &amp;&amp;
         echo '${fname}' > input_list.txt &amp;&amp;
         #for $i, $additional_input in enumerate($additionalinputs):
             #set $index = $i+2
-            #set $safename = ''.join(c in '_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' and c or '_' for c in $input.display_name)
-            #set $fname = 'dataset_' + str($index) + '_' + str($safename) + ".bam"
+            #set $safename = ''.join(c in '_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' and c or '_' for c in $additional_input.file.display_name)
+            #set $fname = 'd' + str($index) + '_' + str($safename) + ".bam"
             ln -s '$additional_input.file' '${fname}' &amp;&amp;
             ln -s '$additional_input.file.metadata.bam_index' '${fname}.bai' &amp;&amp;
             echo '${fname}' >> input_list.txt &amp;&amp;
