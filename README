@@ -14,16 +14,20 @@ versions of cutadapt and the tool wrapper.
 Installation - Manual
 ---------------------
 
-1 - Install the cutadapt package and make sure it is in path for Galaxy
-2 - Copy cutadapt.xml to $GALAXY_HOME/tools/cutadapt
-3 - Add the tool to the $GALAXY_HOME/tool_conf.xml tool-registry file
+1. Install the cutadapt package and make sure it is in path for Galaxy
 
-Optional steps to setup and run Galaxy functional tests
+2. Copy cutadapt.xml to $GALAXY_HOME/tools/cutadapt
 
-4 - Copy test-data/* to $GALAXY_HOME/test-data/
-5 - Set GALAXY_TEST_TOOL_CONF environment variable to a tool_conf.xml file that
+3. Add the tool to the $GALAXY_HOME/tool_conf.xml tool-registry file
+
+    **Optional steps to setup and run Galaxy functional tests**
+
+4. Copy test-data/* to $GALAXY_HOME/test-data/
+
+5. Set GALAXY_TEST_TOOL_CONF environment variable to a tool_conf.xml file that
     contains the tools you want to test. (e.g. 'tool_conf.xml')
-6 - $GALAXY_HOME/run_functional_tests.sh -id cutadapt
+
+6. $GALAXY_HOME/run_functional_tests.sh -id cutadapt
     See the Galaxy Wiki for more information: http://wiki.g2.bx.psu.edu/
 
 
@@ -42,7 +46,10 @@ Reading adapters from a fasta file is not supported
 Colorspace data support is not implemented
 Only one "Strip suffix" is suppored
 
+
 Galaxy Wrapper Development
 --------------------------
+
 Author: Lance Parsons <lparsons@princeton.edu>
-Repository: https://bitbucket.org/lance_parsons/cutadapt_galaxy_wrapper
+
+Repository: [https://bitbucket.org/lance_parsons/cutadapt\_galaxy\_wrapper](https://bitbucket.org/lance_parsons/cutadapt_galaxy_wrapper)
