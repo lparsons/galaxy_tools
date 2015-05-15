@@ -3,6 +3,13 @@
     <requirements>
         <requirement type="package" version="1.6">cutadapt</requirement>
     </requirements>
+
+    <stdio>
+        <exit_code range="1"   level="fatal"   description="IOError, FormatError, or Interrupt" />
+        <exit_code range="2"   level="fatal"   description="Invalid options specified" />
+        <exit_code range="3:"   level="fatal"   description="Unknown error" />
+    </stdio>
+
     <version_command>cutadapt --version</version_command>
 
     <command>cutadapt
@@ -121,6 +128,7 @@
 
         > $report
     </command>
+    
     <inputs>
         <param format="fastq, fastqsanger, fastqillumina, fastqsolexa, fasta" name="input" type="data" optional="false" label="Fastq file to trim" length="100"/>
         <conditional name="paired_end">
@@ -128,6 +136,7 @@
             <when value="true">
                 <param format="fastq, fastqsanger, fastqillumina, fastqsolexa, fasta" name="input2" type="data" optional="false" label="Paired fastq file (NOT trimmed)" length="100"/>
             </when>
+            <when value="false" />
         </conditional>
 
         <repeat name="adapters" title="3' Adapters" help="Sequence of an adapter that was ligated to the 3' end.  The adapter itself and anything that follows is trimmed.">
@@ -255,70 +264,55 @@
 
     <outputs>
         <data format="txt" name="report" label="${tool.name} on ${on_string} (Report)" />
-        <data format="input" name="output" metadata_source="input" label="${tool.name} on ${on_string} (Reads)"/>
-        <data format="input" name="paired_output" metadata_source="input" label="${tool.name} on ${on_string} (Paired Reads)" >
+        <data format_source="input" name="output" metadata_source="input" label="${tool.name} on ${on_string} (Reads)"/>
+        <data format_source="input" name="paired_output" metadata_source="input" label="${tool.name} on ${on_string} (Paired Reads)" >
             <filter>(paired_end['paired_end_boolean'] is True)</filter>
         </data>
-        <data format="input" name="rest_output" metadata_source="input" label="${tool.name} on ${on_string} (Rest of Reads)" >
+        <data format_source="input" name="rest_output" metadata_source="input" label="${tool.name} on ${on_string} (Rest of Reads)" >
             <filter>(output_params['output_type'] == "additional")</filter>
             <filter>(output_params['rest_file'] is True)</filter>
         </data>
-        <data format="txt" name="wild_output" metadata_source="input" label="${tool.name} on ${on_string} (Wildcard File)" >
+        <data format_source="txt" name="wild_output" metadata_source="input" label="${tool.name} on ${on_string} (Wildcard File)" >
             <filter>(output_params['output_type'] == "additional")</filter>
             <filter>(output_params['wildcard_file'] is True)</filter>
         </data>
-        <data format="input" name="too_short_output" metadata_source="input" label="${tool.name} on ${on_string} (Too Short Reads)" >
+        <data format_source="input" name="too_short_output" metadata_source="input" label="${tool.name} on ${on_string} (Too Short Reads)" >
             <filter>(output_params['output_type'] == "additional")</filter>
             <filter>(output_params['too_short_file'] is True)</filter>
         </data>
-        <data format="input" name="too_long_output" metadata_source="input" label="${tool.name} on ${on_string} (Too Long Reads)" >
+        <data format_source="input" name="too_long_output" metadata_source="input" label="${tool.name} on ${on_string} (Too Long Reads)" >
             <filter>(output_params['output_type'] == "additional")</filter>
             <filter>(output_params['too_long_file'] is True)</filter>
         </data>
-        <data format="input" name="untrimmed_output" metadata_source="input" label="${tool.name} on ${on_string} (Untrimmed Reads)" >
+        <data format_source="input" name="untrimmed_output" metadata_source="input" label="${tool.name} on ${on_string} (Untrimmed Reads)" >
             <filter>(output_params['output_type'] == "additional")</filter>
             <filter>(output_params['untrimmed_file'] is True)</filter>
         </data>
-        <data format="input" name="untrimmed_paired_output" metadata_source="input" label="${tool.name} on ${on_string} (Untrimmed Paired Reads)" >
+        <data format_source="input" name="untrimmed_paired_output" metadata_source="input" label="${tool.name} on ${on_string} (Untrimmed Paired Reads)" >
             <filter>(paired_end['paired_end_boolean'] is True)</filter>
             <filter>(output_params['output_type'] == "additional")</filter>
             <filter>(output_params['untrimmed_file'] is True)</filter>
         </data>
-        <data format="txt" name="info_file" metadata_source="input" label="${tool.name} on ${on_string} (Info File)" >
+        <data format_source="txt" name="info_file" metadata_source="input" label="${tool.name} on ${on_string} (Info File)" >
             <filter>(output_params['output_type'] == "additional")</filter>
             <filter>(output_params['info_file'] is True)</filter>
         </data>
     </outputs>
 
-    <stdio>
-        <exit_code range="1"   level="fatal"   description="IOError, FormatError, or Interrupt" />
-        <exit_code range="2"   level="fatal"   description="Invalid options specified" />
-        <exit_code range="3:"   level="fatal"   description="Unknown error" />
-    </stdio>
-
     <tests>
         <test>
             <param name="input" value="cutadapt_small.fastq" ftype="fastqsanger"/>
-            <param name="adapter_source_list" value="user"/>
-            <param name="adapter" value=""/>
             <param name="anywhere_adapter_source_list" value="user"/>
             <param name="anywhere_adapter" value="TTAGACATATCTCCGTCG"/>
-            <param name="front_adapter_source_list" value="user"/>
-            <param name="front_adapter" value=""/>
             <param name="output_filtering" value="default"/>
             <param name="read_modification" value="none"/>
             <param name="output_type" value="default"/>
             <output name="output" file="cutadapt_small.out"/>
         </test>
-<!-- Unable to get tests to function with conditional parameters
         <test>
             <param name="input" value="cutadapt_small.fastq" ftype="fastqsanger"/>
             <param name="adapter_source_list" value="user"/>
             <param name="adapter" value="TTAGACATATCTCCGTCG"/>
-            <param name="anywhere_adapter_source_list" value="user"/>
-            <param name="anywhere_adapter" value=""/>
-            <param name="front_adapter_source_list" value="user"/>
-            <param name="front_adapter" value=""/>
             <param name="output_filtering" value="filter"/>
             <param name="discard" value="true"/>
             <param name="read_modification" value="none"/>
@@ -329,10 +323,6 @@
             <param name="input" value="cutadapt_rest.fa" ftype="fasta"/>
             <param name="adapter_source_list" value="user"/>
             <param name="adapter" value="ADAPTER"/>
-            <param name="anywhere_adapter_source_list" value="user"/>
-            <param name="anywhere_adapter" value=""/>
-            <param name="front_adapter_source_list" value="user"/>
-            <param name="front_adapter" value=""/>
             <param name="output_filtering" value="default"/>
             <param name="read_modification" value="none"/>
             <param name="output_type" value="additional"/>
@@ -340,7 +330,6 @@
             <output name="output" file="cutadapt_rest.out"/>
             <output name="rest_output" file="cutadapt_rest2.out"/>
         </test>
--->
     </tests>
 
     <help>
@@ -468,5 +457,27 @@ When parsing that file, be aware that additional columns may be added in the fut
 
 .. _cutadapt: http://code.google.com/p/cutadapt/
     </help>
+
+    <citations>
+        <citation type="bibtex">
+@article{marcel_cutadapt_2011,
+	title = {Cutadapt removes adapter sequences from high-throughput sequencing reads},
+	volume = {17},
+	copyright = {Authors who publish with this journal agree to the following terms:     Authors retain copyright and grant the journal right of first publication with the work simultaneously licensed under a  Creative Commons Attribution License  that allows others to share the work with an acknowledgement of the work's authorship and initial publication in this journal.   Authors  are able to enter into separate, additional contractual arrangements  for the non-exclusive distribution of the journal's published version of  the work (e.g., post it to an institutional repository or publish it in  a book), with an acknowledgement of its initial publication in this  journal.   Authors are permitted and encouraged to post their  work online (e.g., in institutional repositories or on their website)  prior to and during the submission process, as it can lead to productive  exchanges, as well as earlier and greater citation of published work  (See  The Effect of Open Access ).},
+	url = {http://journal.embnet.org/index.php/embnetjournal/article/view/200},
+	abstract = {When small RNA is sequenced on current sequencing machines, the resulting reads are usually longer than the RNA and therefore contain parts of the 3' adapter. That adapter must be found and removed error-tolerantly from each read before read mapping. Previous solutions are either hard to use or do not offer required features, in particular support for color space data. As an easy to use alternative, we developed the command-line tool cutadapt, which supports 454, Illumina and SOLiD (color space) data, offers two adapter trimming algorithms, and has other useful features.
+
+Cutadapt, including its MIT-licensed source code, is available for download at http://code.google.com/p/cutadapt/},
+	number = {1},
+	urldate = {2011-08-02},
+	journal = {EMBnet.journal},
+	author = {Marcel, Martin},
+	year = {2011},
+	note = {When small RNA is sequenced on current sequencing machines, the resulting reads are usually longer than the RNA and therefore contain parts of the 3' adapter. That adapter must be found and removed error-tolerantly from each read before read mapping. Previous solutions are either hard to use or do not offer required features, in particular support for color space data. As an easy to use alternative, we developed the command-line tool cutadapt, which supports 454, Illumina and SOLiD (color space) data, offers two adapter trimming algorithms, and has other useful features.   Cutadapt, including its MIT-licensed source code, is available for download at  http://code.google.com/p/cutadapt/},
+	keywords = {Adapter removal;, fastq, MicroRNA, Sequencing, Small RNA, software},
+	file = {Cutadapt removes adapter sequences from high-throughput sequencing reads | Martin | EMBnet.journal:/Users/lparsons/Library/Application Support/Firefox/Profiles/thd2t4je.default/zotero/storage/ZXZT4PSE/200.html:text/html}
+}
+        </citation>
+    </citations>
 
 </tool>

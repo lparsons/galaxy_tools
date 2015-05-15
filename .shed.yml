@@ -1,0 +1,4 @@
+categories: !!python/tuple [Fastq Manipulation]
+description: !!python/unicode 'cutadapt'
+name: !!python/unicode 'cutadapt'
+owner: !!python/unicode 'lparsons'
