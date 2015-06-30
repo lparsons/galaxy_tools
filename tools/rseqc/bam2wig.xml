@@ -1,19 +1,27 @@
-<tool id="rseqc_bam2wig" name="BAM to Wiggle" version="2.4">
-    <description> 
-        converts all types of RNA-seq data from .bam to .wig 
+<tool id="rseqc_bam2wig" name="BAM to Wiggle" version="2.4galaxy1">
+    <description>
+        converts all types of RNA-seq data from .bam to .wig
     </description>
+
+    <macros>
+        <import>rseqc_macros.xml</import>
+    </macros>
+
     <requirements>
         <requirement type="package" version="3.0.3">R</requirement>
         <requirement type="package" version="1.7.1">numpy</requirement>
         <requirement type="package" version="2.4">rseqc</requirement>
     </requirements>
-    <command>
-        tmp_input_name=\$(mktemp -u);
-        bai='.bai';
 
-        ln -s "${input}" \$tmp_input_name &amp;&amp;
-        ln -s "${input.metadata.bam_index}" \$tmp_input_name\$bai &amp;&amp;
-        bam2wig.py -i \$tmp_input_name -s $chromsize -o outfile
+    <stdio>
+        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
+        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
+    </stdio>
+
+    <command><![CDATA[
+        ln -sfn '${input}' 'input.bam' &&
+        ln -sfn '${input.metadata.bam_index}' 'input.bam.bai' &&
+        bam2wig.py -i input.bam -s $chromsize -o outfile
 
         #if str($strand_type.strand_specific) == "pair"
             -d
@@ -36,26 +44,34 @@
         #if $wigsum.wigsum_type
             -t $wigsum.totalwig
         #end if
-
-        #if $skipmultihits
-            -u
+        #if $multihits.skipmultihits
+            --skip-multi-hits
+            --mapq=$multihits.mapq
         #end if
-        ;
-        rm "\$tmp_input_name\$bai";
-        rm \$tmp_input_name
+        2>&1
+        ]]>
     </command>
     <inputs>
-        <param name="input" type="data" label="Input .bam File" format="bam" />
-        <param name="chromsize" type="data" label="Chromosome size file (tab or space separated)" format="txt,tabular" />
-        <param name="skipmultihits" type="boolean" label="Skip Multiple Hit Reads/Only Use Uniquely Mapped Reads" value="false" />
+        <param name="input" type="data" label="Input .bam File" format="bam" help="(--input-file)"/>
+        <param name="chromsize" type="data" label="Chromosome size file (tab or space separated)" format="txt,tabular" help="(--chromSize)"/>
+
+        <conditional name="multihits">
+            <param name="skipmultihits" type="boolean" label="Skip Multiple Hit Reads/Only Use Uniquely Mapped Reads" value="false" help="(--skip-multi-hits)" />
+            <when value="true">
+                <param name="mapq" value="30" type="integer" label="Minimum mapping quality for an alignment to be called 'uniquly mapped'" help="(--mapq)" />
+            </when>
+            <when value="false" />
+        </conditional>
+
         <conditional name="wigsum">
             <param name="wigsum_type" type="boolean" label="Specify wigsum?" value="false">
             </param>
             <when value="true">
-                <param name="totalwig" value="0" type="integer" label="specified wigsum" />
+                <param name="totalwig" value="0" type="integer" label="specified wigsum" help="(--wigsum)"/>
             </when>
             <when value="false"/>
         </conditional>
+
         <conditional name="strand_type">
             <param name="strand_specific" type="select" label="Strand-specific?" value="none">
                 <option value="none">none</option>
@@ -63,13 +79,13 @@
                 <option value="single">Single-End RNA-seq</option>
             </param>
             <when value="pair">
-                <param name="pair_type" type="select" display="radio" label="Pair-End Read Type (format: mapped --> parent)" value="sd">
+                <param name="pair_type" type="select" display="radio" label="Pair-End Read Type (format: mapped --> parent)" value="sd" help="(--strand)">
                     <option value="sd"> read1 (positive --> positive; negative --> negative), read2 (positive --> negative; negative --> positive)</option>
                     <option value="ds">read1 (positive --> negative; negative --> positive), read2 (positive --> positive; negative --> negative)</option>
                 </param>
             </when>
             <when value="single">
-                <param name="single_type" type="select" display="radio" label="Single-End Read Type (format: mapped --> parent)" value="s">
+                <param name="single_type" type="select" display="radio" label="Single-End Read Type (format: mapped --> parent)" value="s" help="(--strand)">
                     <option value="s">positive --> positive; negative --> negative</option>
                     <option value="d">positive --> negative; negative --> positive</option>
                 </param>
@@ -77,7 +93,8 @@
             <when value="none"></when>
         </conditional>
     </inputs>
-    <outputs> 
+
+    <outputs>
         <data format="wig" name="output" from_work_dir="outfile.wig">
             <filter>strand_type['strand_specific'] == 'none'</filter>
         </data>
@@ -88,11 +105,31 @@
             <filter>strand_type['strand_specific'] != 'none'</filter>
         </data>
     </outputs>
-    <stdio>
-        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
-        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
-    </stdio>
-    <help>
+
+    <tests>
+        <test>
+            <param name="input" value="pairend_strandspecific_51mer_hg19_chr1_1-100000.bam"/>
+            <param name="chromsize" value="hg19.chrom.sizes"/>
+            <output name="output" file="testwig.wig"/>
+        </test>
+        <test>
+            <param name="input" value="pairend_strandspecific_51mer_hg19_chr1_1-100000.bam"/>
+            <param name="chromsize" value="hg19.chrom.sizes"/>
+            <param name="skipmultihits" value="True"/>
+            <param name="mapq" value="20"/>
+            <output name="output" file="testwig.wig"/>
+        </test>
+        <test>
+            <param name="input" value="pairend_strandspecific_51mer_hg19_chr1_1-100000.bam"/>
+            <param name="chromsize" value="hg19.chrom.sizes"/>
+            <param name="strand_specific" value="pair"/>
+            <param name="pair_type" value="sd"/>
+            <output name="outputfwd" file="testwig.Forward.wig"/>
+            <output name="outputrv" file="testwig.Reverse.wig"/>
+        </test>
+    </tests>
+
+    <help><![CDATA[
 bam2wig.py
 ++++++++++
 
@@ -130,24 +167,10 @@ If RNA-seq is not strand specific, one wig file will be generated, if RNA-seq
 is strand specific, two wig files corresponding to Forward and Reverse will be generated.
 
 -----
-
-About RSeQC 
-+++++++++++
-
-
-The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
-
-The RSeQC package is licensed under the GNU GPL v3 license.
-
-.. image:: http://rseqc.sourceforge.net/_static/logo.png
-
-.. _RSeQC: http://rseqc.sourceforge.net/
-.. _UCSC: http://genome.ucsc.edu/index.html
-.. _IGB: http://bioviz.org/igb/
-.. _IGV: http://www.broadinstitute.org/igv/home
-.. _BAM: http://genome.ucsc.edu/goldenPath/help/bam.html
-.. _wiggle: http://genome.ucsc.edu/goldenPath/help/wiggle.html
-.. _bigwig: http://genome.ucsc.edu/FAQ/FAQformat.html#format6.1
-
+]]>
+        <expand macro="about" />
     </help>
+
+    <expand macro="citations" />
+
 </tool>

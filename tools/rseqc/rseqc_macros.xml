@@ -1,0 +1,51 @@
+<macros>
+    <xml name="citations">
+        <citations>
+            <citation type="bibtex">
+    @article{wang_rseqc:_2012,
+        title = {{RSeQC}: quality control of {RNA}-seq experiments},
+        volume = {28},
+        issn = {1367-4803, 1460-2059},
+        shorttitle = {{RSeQC}},
+        url = {http://bioinformatics.oxfordjournals.org/content/28/16/2184},
+        doi = {10.1093/bioinformatics/bts356},
+        abstract = {Motivation: RNA-seq has been extensively used for transcriptome study. Quality control (QC) is critical to ensure that RNA-seq data are of high quality and suitable for subsequent analyses. However, QC is a time-consuming and complex task, due to the massive size and versatile nature of RNA-seq data. Therefore, a convenient and comprehensive QC tool to assess RNA-seq quality is sorely needed.
+    Results: We developed the RSeQC package to comprehensively evaluate different aspects of RNA-seq experiments, such as sequence quality, GC bias, polymerase chain reaction bias, nucleotide composition bias, sequencing depth, strand specificity, coverage uniformity and read distribution over the genome structure. RSeQC takes both SAM and BAM files as input, which can be produced by most RNA-seq mapping tools as well as BED files, which are widely used for gene models. Most modules in RSeQC take advantage of R scripts for visualization, and they are notably efficient in dealing with large BAM/SAM files containing hundreds of millions of alignments.
+    Availability and implementation: RSeQC is written in Python and C. Source code and a comprehensive user's manual are freely available at: http://code.google.com/p/rseqc/.
+    Contact: WL1\{at\}bcm.edu
+    Supplementary Information: Supplementary data are available at Bioinformatics online.},
+        language = {en},
+        number = {16},
+        urldate = {2015-06-30},
+        journal = {Bioinformatics},
+        author = {Wang, Liguo and Wang, Shengqin and Li, Wei},
+        month = aug,
+        year = {2012},
+        pmid = {22743226},
+        pages = {2184--2185},
+    }
+            </citation>
+        </citations>
+    </xml>
+
+    <xml name="about"><![CDATA[
+About RSeQC
++++++++++++
+
+
+The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
+
+The RSeQC package is licensed under the GNU GPL v3 license.
+
+.. image:: http://rseqc.sourceforge.net/_static/logo.png
+
+.. _RSeQC: http://rseqc.sourceforge.net/
+.. _UCSC: http://genome.ucsc.edu/index.html
+.. _IGB: http://bioviz.org/igb/
+.. _IGV: http://www.broadinstitute.org/igv/home
+.. _BAM: http://genome.ucsc.edu/goldenPath/help/bam.html
+.. _wiggle: http://genome.ucsc.edu/goldenPath/help/wiggle.html
+.. _bigwig: http://genome.ucsc.edu/FAQ/FAQformat.html#format6.1
+]]>
+    </xml>
+</macros>
