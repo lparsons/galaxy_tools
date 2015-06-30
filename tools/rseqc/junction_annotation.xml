@@ -1,0 +1,101 @@
+<tool id="rseqc_junction_annotation" name="Junction Annotation" version="2.4">
+    <description>compares detected splice junctions to reference gene model</description>
+    <requirements>
+        <requirement type="package" version="3.0.3">R</requirement>
+        <requirement type="package" version="1.7.1">numpy</requirement>
+        <requirement type="package" version="2.4">rseqc</requirement>
+    </requirements>
+    <command>
+        junction_annotation.py 
+            -i $input -o output -r $refgene
+            #if $intron.hasIntron
+                -m $intron.min_Intron
+            #end if
+    </command>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
+        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
+    </stdio>
+    <inputs>
+        <param name="input" type="data" format="bam,sam" label="input bam/sam file" />
+        <param name="refgene" type="data" format="bed" label="reference gene model" />
+        <conditional name="intron">
+            <param name="hasIntron" type="boolean" label="Specify minimum intron length" value="false"/>
+            <when value="true">
+                <param name="min_Intron" type="integer" value="50" label="Minimum intron length (bp, default=50)" />
+            </when>
+        </conditional>
+    </inputs>
+    <outputs>
+        <data format="xls" name="outputxls" from_work_dir="output.junction.xls" label="${tool.name} on ${on_string} (XLS)"/>
+        <data format="txt" name="outputr" from_work_dir="output.junction_plot.r" label="${tool.name} on ${on_string} (R Script)" />
+        <data format="pdf" name="outputpdf" from_work_dir="output.splice_events.pdf" label="${tool.name} on ${on_string} (Splice Events PDF)"/>
+        <data format="pdf" name="outputjpdf" from_work_dir="output.splice_junction.pdf" label="${tool.name} on ${on_string} (Splice Junction PDF)" />
+    </outputs>
+    <help>
+junction_annotation.py
+++++++++++++++++++++++
+
+For a given alignment file (-i) in BAM or SAM format and a reference gene model (-r) in BED
+format, this program will compare detected splice junctions to reference gene model. splicing
+annotation is performed in two levels: splice event level and splice junction level.
+
+* splice event: An RNA read, especially long read, can be spliced 2 or more times, each time is called a splicing event; In this sense, 100 spliced reads can produce >= 100 splicing events. 
+* splice junction: multiple splicing events spanning the same intron can be consolidated into one splicing junction. 
+
+All detected junctions can be grouped to 3 exclusive categories:
+
+1. Annotated: The junction is part of the gene model. Both splice sites, 5' splice site 
+   (5'SS) and 3'splice site (3'SS) can be annotated by reference gene model. 
+2. complete_novel: Complete new junction. Neither of the two splice sites cannot be annotated by gene model 
+3. partial_novel: One of the splice site (5'SS or 3'SS) is new, while the other splice site is annotated (known) 
+
+Inputs
+++++++++++++++
+
+Input BAM/SAM file
+    Alignment file in BAM/SAM format.
+
+Reference gene model
+    Gene model in BED format.
+
+Minimum intron length (default=50)
+    Minimum intron length (bp).
+
+
+Output
+++++++++++++++
+
+1. output.junc.anno.junction.xls:
+    - chrom ID
+    - start position of junction (coordinate is 0 based)
+    - end position of junction (coordinate is 1 based)
+    - number of splice events supporting this junction
+    - 'annotated', 'complete_novel' or 'partial_novel'.
+2. output.anno.junction_plot.r: R script to generate pie chart
+3. output.splice_junction.pdf: plot of splice junctions
+4. output.splice_events.pdf: plot of splice events
+
+.. image:: http://rseqc.sourceforge.net/_images/junction.png
+   :height: 400 px
+   :width: 850 px
+   :scale: 80 %      
+
+-----
+
+About RSeQC 
++++++++++++
+
+The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
+
+The RSeQC package is licensed under the GNU GPL v3 license.
+
+.. image:: http://rseqc.sourceforge.net/_static/logo.png
+
+.. _RSeQC: http://rseqc.sourceforge.net/
+
+
+
+
+    </help>
+</tool>

@@ -1,0 +1,107 @@
+<tool id="rseqc_geneBody_coverage" name="Gene Body Converage (BAM)" version="2.4">
+    <description>
+        Read coverage over gene body.
+    </description>
+    <requirements>
+        <requirement type="package" version="3.0.3">R</requirement>
+        <requirement type="package" version="1.7.1">numpy</requirement>
+        <requirement type="package" version="2.4">rseqc</requirement>
+    </requirements>
+    <command>
+        #set $safename = ''.join(c in '_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' and c or '_' for c in $input.display_name)
+        #set $fname = "d1_" + str($safename) + ".bam"
+        ln -s '${input}' '${fname}' &amp;&amp;
+        ln -s '${input.metadata.bam_index}' '${fname}.bai' &amp;&amp;
+        echo '${fname}' > input_list.txt &amp;&amp;
+        #for $i, $additional_input in enumerate($additionalinputs):
+            #set $index = $i+2
+            #set $safename = ''.join(c in '_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' and c or '_' for c in $additional_input.file.display_name)
+            #set $fname = 'd' + str($index) + '_' + str($safename) + ".bam"
+            ln -s '$additional_input.file' '${fname}' &amp;&amp;
+            ln -s '$additional_input.file.metadata.bam_index' '${fname}.bai' &amp;&amp;
+            echo '${fname}' >> input_list.txt &amp;&amp;
+        #end for
+        geneBody_coverage.py -i input_list.txt -r $refgene --minimum_length $minimum_length -o output
+    </command>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
+        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
+    </stdio>
+    <inputs>
+        <param name="input" type="data" label="Additional input .bam files" format="bam" />
+        <repeat name="additionalinputs" title="Input .bam file">
+            <param name="file" type="data" label="Input .bam file" format="bam" />
+        </repeat>
+        <param name="refgene" type="data" label="Reference Genome" format="bed" />
+        <param name="minimum_length" type="integer" value="100" label="Minimum mRNA length" help="Minimum mRNA length (bp). mRNA that are shorter than this value will be skipped (default is 100)." />
+    </inputs>
+    <outputs>
+        <data name="outputcurvespdf" format="pdf" from_work_dir="output.geneBodyCoverage.curves.pdf" label="${tool.name} on ${on_string} (Curves PDF)" />
+        <data name="outputheatmappdf" format="pdf" from_work_dir="output.geneBodyCoverage.heatMap.pdf" label="${tool.name} on ${on_string} (HeatMap PDF)">
+            <filter>len(additionalinputs) >= 2</filter>
+        </data>
+        <data name="outputr" format="txt" from_work_dir="output.geneBodyCoverage.r" label="${tool.name} on ${on_string} (R Script)" />
+        <data name="outputtxt" format="txt" from_work_dir="output.geneBodyCoverage.txt" label="${tool.name} on ${on_string} (Text)" />
+    </outputs>
+    <help>
+geneBody_coverage.py
+++++++++++++++++++++
+
+Read coverage over gene body. This module is used to check if read coverage is uniform and if there is any 5\'/3\' bias. This module scales all transcripts to 100 nt and calculates the number of reads covering each nucleotide position. Finally, it generates plots illustrating the coverage profile along the gene body.
+
+If 3 or more BAM files were provided. This program generates a lineGraph and a heatmap. If fewer than 3 BAM files were provided, only lineGraph is generated. See below for examples.
+
+When heatmap is generated, samples are ranked by the "skewness" of the coverage: Sample with best (worst) coverage will be displayed at the top (bottom) of the heatmap.
+Coverage skewness was measured by `Pearson’s skewness coefficients &lt;http://en.wikipedia.org/wiki/Skewness#Pearson.27s_skewness_coefficients>`_
+
+Inputs
+++++++++++++++
+
+Input BAM/SAM file
+	Alignment file in BAM/SAM format.
+
+Reference gene model
+	Gene Model in BED format.
+
+Minimum mRNA length
+    Minimum mRNA length (bp). mRNA that are shorter than this value will be skipped (default is 100).
+
+Outputs
+++++++++++++++
+Text
+    Table that includes the data used to generate the plots
+
+R Script
+    R script file that reads the data and generates the plot
+
+PDF
+    The final plot, in PDF format
+
+Example plots:
+    .. image:: http://rseqc.sourceforge.net/_images/Aug_26.geneBodyCoverage.curves.png
+        :height: 600 px
+        :width: 600 px
+        :scale: 80 %
+
+    .. image:: http://rseqc.sourceforge.net/_images/Aug_26.geneBodyCoverage.heatMap.png
+        :height: 600 px
+        :width: 600 px
+        :scale: 80 %
+
+-----
+
+About RSeQC
++++++++++++
+
+The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
+
+The RSeQC package is licensed under the GNU GPL v3 license.
+
+.. image:: http://rseqc.sourceforge.net/_static/logo.png
+
+.. _RSeQC: http://rseqc.sourceforge.net/
+
+
+
+	</help>
+</tool>
