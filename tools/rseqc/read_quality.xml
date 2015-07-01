@@ -1,27 +1,53 @@
-<tool id="rseqc_read_quality" name="Read Quality" version="2.4">
+<tool id="rseqc_read_quality" name="Read Quality" version="2.4galaxy1">
     <description>determines Phred quality score</description>
+
+    <macros>
+        <import>rseqc_macros.xml</import>
+    </macros>
+
     <requirements>
-        <requirement type="package" version="3.0.3">R</requirement>
-        <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.4">rseqc</requirement>
+        <expand macro="requirement_package_r" />
+        <expand macro="requirement_package_numpy" />
+        <expand macro="requirement_package_rseqc" />
     </requirements>
-    <command>
-        read_quality.py -i $input -o output -r $reduce
+
+    <expand macro="stdio" />
+
+    <version_command><![CDATA[read_quality.py --version]]></version_command>
+
+    <command><![CDATA[
+        read_quality.py
+            --input-file $input
+            --out-prefix output
+            -r $reduce
+            --mapq $mapq
+        ]]>
     </command>
-    <stdio>
-        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
-        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
-    </stdio>
+
     <inputs>
-        <param name="input" type="data" format="bam,sam" label="input bam/sam file" />
-        <param name="reduce" type="integer" label="Ignore Phred scores less than this amount (only applies to 'boxplot', default=1000)" value="1000" />
+        <param name="input" type="data" format="bam,sam" label="input bam/sam file" help="(--input-file)"/>
+        <param name="reduce" type="integer" label="Ignore Phred scores less than this amount (only applies to 'boxplot', default=1000)" value="1000" help="(--reduce)"/>
+        <param name="mapq" type="integer" label="Minimum mapping quality (default=30)" help="Minimum phred scale mapping quality to consider a read 'uniquely mapped' (--mapq)" value="30" />
     </inputs>
+
     <outputs>
         <data format="txt" name="outputr" from_work_dir="output.qual.r" label="${tool.name} on ${on_string} (R Script)" />
-        <data format="pdf" name="outputpdf" from_work_dir="output.qual.heatmap.pdf" label="${tool.name} on ${on_string} (Heatmap PDF)" />
-        <data format="pdf" name="outputpdf" from_work_dir="output.qual.boxplot.pdf" label="${tool.name} on ${on_string} (Boxplot PDF)" />
+        <data format="pdf" name="outputheatpdf" from_work_dir="output.qual.heatmap.pdf" label="${tool.name} on ${on_string} (Heatmap PDF)" />
+        <data format="pdf" name="outputboxpdf" from_work_dir="output.qual.boxplot.pdf" label="${tool.name} on ${on_string} (Boxplot PDF)" />
     </outputs>
-    <help>
+
+    <!-- Unable to succefully run this script, it seems deprecated and should probably be dropped
+    <tests>
+        <test>
+            <param name="input" value="pairend_strandspecific_51mer_hg19_chr1_1-100000.bigwig"/>
+            <output name="outputr" file="output.qual.r"/>
+            <output name="outputheatpdf" file="output.qual.heatmap.pdf"/>
+            <output name="outputboxpdf" file="output.qual.boxplot.pdf"/>
+        </test>
+    </tests>
+    -->
+
+    <help><![CDATA[
 read_quality.py
 +++++++++++++++
 
@@ -30,7 +56,7 @@ in SAM file, then Phred Quality Score = ord(Q) - 33. Here ord() is python functi
 returns an integer representing the Unicode code point of the character when the argument
 is a unicode object, for example, ord('a') returns 97. Phred quality score is widely used
 to measure "reliability" of base-calling, for example, phred quality score of 20 means
-there is 1/100 chance that the base-calling is wrong, phred quality score of 30 means there 
+there is 1/100 chance that the base-calling is wrong, phred quality score of 30 means there
 is 1/1000 chance that the base-calling is wrong. In general: Phred quality score = -10xlog(10)P,
 here P is probability that base-calling is wrong.
 
@@ -51,18 +77,18 @@ Output
     .. image:: http://rseqc.sourceforge.net/_images/36mer.qual.plot.png
         :height: 600 px
         :width: 600 px
-        :scale: 80 %    
+        :scale: 80 %
 3. output.qual.heatmap.pdf
     .. image:: http://rseqc.sourceforge.net/_images/36mer.qual.heatmap.png
         :height: 600 px
         :width: 600 px
-        :scale: 80 %    
+        :scale: 80 %
 
 Heatmap: use different color to represent nucleotide density ("blue"=low density,"orange"=median density,"red"=high density")
 
 -----
 
-About RSeQC 
+About RSeQC
 +++++++++++
 
 The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
@@ -72,7 +98,9 @@ The RSeQC package is licensed under the GNU GPL v3 license.
 .. image:: http://rseqc.sourceforge.net/_static/logo.png
 
 .. _RSeQC: http://rseqc.sourceforge.net/
-
-
+]]>
     </help>
+
+    <expand macro="citations" />
+
 </tool>
