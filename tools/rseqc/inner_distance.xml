@@ -11,10 +11,7 @@
         <expand macro="requirement_package_rseqc" />
     </requirements>
 
-    <stdio>
-        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
-        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
-    </stdio>
+    <expand macro="stdio" />
 
     <version_command><![CDATA[inner_distance.xml --version]]></version_command>
 
