@@ -18,6 +18,8 @@
         <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
     </stdio>
 
+    <version_command><![CDATA[bam2wig.py --version]]></version_command>
+
     <command><![CDATA[
         ln -sfn '${input}' 'input.bam' &&
         ln -sfn '${input.metadata.bam_index}' 'input.bam.bai' &&

@@ -17,6 +17,8 @@
         <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
     </stdio>
 
+    <version_command><![CDATA[bam_stat.py --version]]></version_command>
+
     <command><![CDATA[
         bam_stat.py -i $input -q $mapqual 2> $output
         ]]>
