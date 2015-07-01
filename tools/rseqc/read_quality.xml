@@ -36,7 +36,7 @@
         <data format="pdf" name="outputboxpdf" from_work_dir="output.qual.boxplot.pdf" label="${tool.name} on ${on_string} (Boxplot PDF)" />
     </outputs>
 
-    <!-- Unable to succefully run this script, it seems deprecated and should probably be dropped
+    <!-- Unable to succefully run this script with test data
     <tests>
         <test>
             <param name="input" value="pairend_strandspecific_51mer_hg19_chr1_1-100000.bigwig"/>
