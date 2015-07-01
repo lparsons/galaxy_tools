@@ -1,58 +1,62 @@
-<tool id="rseqc_inner_distance" name="Inner Distance" version="2.4">
+<tool id="rseqc_inner_distance" name="Inner Distance" version="2.4galaxy1">
     <description>calculate the inner distance (or insert size) between two paired RNA reads</description>
+
+    <macros>
+        <import>rseqc_macros.xml</import>
+    </macros>
+
     <requirements>
-        <requirement type="package" version="3.0.3">R</requirement>
-        <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.4">rseqc</requirement>
+        <expand macro="requirement_package_r" />
+        <expand macro="requirement_package_numpy" />
+        <expand macro="requirement_package_rseqc" />
     </requirements>
-    <command>
-        inner_distance.py -i $input -o output -r $refgene
 
-            #if $bounds.hasLowerBound
-                -l $bounds.lowerBound
-            #end if
-
-            #if $bounds2.hasUpperBound
-                -u $bounds2.upperBound
-            #end if
-
-            #if $steps.step
-                -s $steps.stepSize
-            #end if
-    </command>
     <stdio>
         <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
         <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
     </stdio>
+
+    <version_command><![CDATA[inner_distance.xml --version]]></version_command>
+
+    <command><![CDATA[
+        inner_distance.py -i $input -o output -r $refgene
+            --sample-size $sample_size
+            --lower-bound $lowerBound
+            --upper-bound $upperBound
+            --step $step
+            --mapq $mapq
+        ]]>
+    </command>
+
     <inputs>
-        <param name="input" type="data" format="bam,sam" label="input bam/sam file" />
-        <param name="refgene" type="data" format="bed" label="reference gene model" />
-        <conditional name="bounds">
-            <param name="hasLowerBound" type="boolean" label="Specify lower bound" value="false"/>
-            <when value="true">
-                <param name="lowerBound" type="integer" value="-250" label="Estimated Lower Bound (bp, default=-250)" />
-            </when>
-        </conditional>
-        <conditional name="bounds2">
-            <param name="hasUpperBound" type="boolean" label="Specify upper bound" value="false" />
-            <when value="true">
-                <param name="upperBound" type="integer" value="250" label="Estimated Upper Bound (bp, default=250)" />
-            </when>
-        </conditional>
-        <conditional name="steps">
-            <param name="step" type="boolean" label="Specify step size" value="false" />
-            <when value="true">
-                <param name="stepSize" type="integer" value="5" label="Step size (bp, default=5)" />
-            </when>
-        </conditional>
+        <param name="input" type="data" format="bam,sam" label="input bam/sam file" help="(--input-file)" />
+        <param name="refgene" type="data" format="bed" label="reference gene model" help="(--refgene)" />
+        <param name="sample_size" type="integer" label="Number of read-pairs used to estimate inner distance (default = 1000000)" value="1000000" help="(--sample-size)"/>
+        <param name="lowerBound" type="integer" value="-250" label="Lower bound (bp, default=-250)" help="Used for plotting histogram (--lower-bound)"/>
+        <param name="upperBound" type="integer" value="250" label="Upper bound (bp, default=250)" help="Used for plotting histogram (--upper-bound)"/>
+        <param name="step" type="integer" value="5" label="Step size of histogram (bp, default=5)" help="(--step)"/>
+        <param name="mapq" type="integer" label="Minimum mapping quality (default=30)" help="Minimum phred scale mapping quality to consider a read 'uniquely mapped' (--mapq)" value="30" />
     </inputs>
+
     <outputs>
         <data format="txt" name="outputtxt" from_work_dir="output.inner_distance.txt" label="${tool.name} on ${on_string} (Text)"/>
         <data format="txt" name="outputfreqtxt" from_work_dir="output.inner_distance_freq.txt" label="${tool.name} on ${on_string} (Freq Text)" />
         <data format="pdf" name="outputpdf" from_work_dir="output.inner_distance_plot.pdf" label="${tool.name} on ${on_string} (PDF)" />
         <data format="txt" name="outputr" from_work_dir="output.inner_distance_plot.r" label="${tool.name} on ${on_string} (R Script)" />
     </outputs>
-    <help>
+
+    <tests>
+        <test>
+            <param name="input" value="pairend_strandspecific_51mer_hg19_chr1_1-100000.bam"/>
+            <param name="refgene" value="hg19_RefSeq_chr1_1-100000.bed"/>
+            <output name="outputtxt" file="output.inner_distance.txt"/>
+            <output name="outputfreqtxt" file="output.inner_distance_freq.txt"/>
+            <output name="outputpdf" file="output.inner_distance_plot.pdf"/>
+            <output name="outputr" file="output.inner_distance_plot.r"/>
+        </test>
+    </tests>
+
+    <help><![CDATA[
 inner_distance.py
 +++++++++++++++++
 
@@ -63,10 +67,10 @@ genomic (DNA) size between two paired reads: D_size = read2_start - read1_end, t
 * if two paired reads map to the same exon: inner distance = D_size
 * if two paired reads map to different exons:inner distance = D_size - intron_size
 * if two paired reads map non-exonic region (such as intron and intergenic region): inner distance = D_size
-* The inner_distance might be a negative value if two fragments were overlapped. 
+* The inner_distance might be a negative value if two fragments were overlapped.
 
 NOTE: Not all read pairs were used to estimate the inner distance distribution. Those low
-quality, PCR duplication, multiple mapped reads were skipped. 
+quality, PCR duplication, multiple mapped reads were skipped.
 
 Inputs
 ++++++++++++++
@@ -102,12 +106,12 @@ Output
 .. image:: http://rseqc.sourceforge.net/_images/inner_distance.png
    :height: 600 px
    :width: 600 px
-   :scale: 80 %                        
+   :scale: 80 %
 
 
 -----
 
-About RSeQC 
+About RSeQC
 +++++++++++
 
 The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
@@ -118,6 +122,9 @@ The RSeQC package is licensed under the GNU GPL v3 license.
 
 .. _RSeQC: http://rseqc.sourceforge.net/
 
-
+]]>
     </help>
+
+    <expand macro="citations" />
+
 </tool>

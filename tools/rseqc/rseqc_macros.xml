@@ -28,19 +28,9 @@
         </citations>
     </xml>
 
-    <xml name="requirements_all">
-        <requirements>
-            <requirement type="package" version="3.0.3">R</requirement>
-            <requirement type="package" version="1.7.1">numpy</requirement>
-            <requirement type="package" version="2.4">rseqc</requirement>
-        </requirements>
-    </xml>
+    <xml name="requirement_package_r"><requirement type="package" version="3.0.3">R</requirement></xml>
+    <xml name="requirement_package_numpy"><requirement type="package" version="1.7.1">numpy</requirement></xml>
 
-    <xml name="requirements_nor">
-        <requirements>
-            <requirement type="package" version="1.7.1">numpy</requirement>
-            <requirement type="package" version="2.4">rseqc</requirement>
-        </requirements>
-    </xml>
+    <xml name="requirement_package_rseqc"><requirement type="package" version="2.4">rseqc</requirement></xml>
 
 </macros>
