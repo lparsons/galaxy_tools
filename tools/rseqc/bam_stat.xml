@@ -7,10 +7,7 @@
         <import>rseqc_macros.xml</import>
     </macros>
 
-    <requirements>
-        <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.4">rseqc</requirement>
-    </requirements>
+    <expand macro="requirements_nor" />
 
     <stdio>
         <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
@@ -68,8 +65,20 @@ Output
 - Uniquely mapped Reads = {Splice reads} + {Non-splice reads}
 
 -----
+
+About RSeQC
++++++++++++
+
+
+The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
+
+The RSeQC package is licensed under the GNU GPL v3 license.
+
+.. image:: http://rseqc.sourceforge.net/_static/logo.png
+
+.. _RSeQC: http://rseqc.sourceforge.net/
+
 ]]>
-        <expand macro="about" />
     </help>
 
     <expand macro="citations" />
