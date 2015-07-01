@@ -1,26 +1,48 @@
-<tool id="rseqc_read_GC" name="Read GC" version="2.4">
+<tool id="rseqc_read_GC" name="Read GC" version="2.4galaxy1">
     <description>determines GC% and read count</description>
+
+    <macros>
+        <import>rseqc_macros.xml</import>
+    </macros>
+
     <requirements>
-        <requirement type="package" version="3.0.3">R</requirement>
-        <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.4">rseqc</requirement>
+        <expand macro="requirement_package_r" />
+        <expand macro="requirement_package_numpy" />
+        <expand macro="requirement_package_rseqc" />
     </requirements>
-    <command>
-        read_GC.py -i $input -o output
+
+    <expand macro="stdio" />
+
+    <version_command><![CDATA[read_GC.py --version]]></version_command>
+
+    <command><![CDATA[
+        read_GC.py
+            --input-file $input
+            --out-prefix output
+            --mapq $mapq
+        ]]>
     </command>
-    <stdio>
-        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
-        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
-    </stdio>
+
     <inputs>
-        <param name="input" type="data" format="bam,sam" label="input bam/sam file" />
+        <param name="input" type="data" format="bam,sam" label="input bam/sam file" help="(--input-file)"/>
+        <param name="mapq" type="integer" label="Minimum mapping quality (default=30)" help="Minimum phred scale mapping quality to consider a read 'uniquely mapped' (--mapq)" value="30" />
     </inputs>
+
     <outputs>
         <data format="xls" name="outputxls" from_work_dir="output.GC.xls" label="${tool.name} on ${on_string} (XLS)"/>
         <data format="txt" name="outputr" from_work_dir="output.GC_plot.r" label="${tool.name} on ${on_string} (R Script)" />
         <data format="pdf" name="outputpdf" from_work_dir="output.GC_plot.pdf" label="${tool.name} on ${on_string} (PDF)" />
     </outputs>
-    <help>
+
+    <tests>
+        <test>
+            <param name="input" value="pairend_strandspecific_51mer_hg19_chr1_1-100000.bam"/>
+            <output name="outputxls" file="output.GC.xls"/>
+            <output name="outputr" file="output.GC_plot.r"/>
+        </test>
+    </tests>
+
+    <help><![CDATA[
 read_GC.py
 ++++++++++
 
@@ -36,16 +58,16 @@ Output
 
 1. output.GC.xls: Two column, plain text file, first column is GC%, second column is read count
 2. output.GC_plot.r: R script to generate pdf file.
-3. output.GC_plot.pdf: graphical output generated from R script. 
+3. output.GC_plot.pdf: graphical output generated from R script.
 
-.. image:: http://rseqc.sourceforge.net/_images/read_gc.png 
+.. image:: http://rseqc.sourceforge.net/_images/read_gc.png
    :height: 600 px
    :width: 600 px
-   :scale: 80 %    
+   :scale: 80 %
 
 -----
 
-About RSeQC 
+About RSeQC
 +++++++++++
 
 The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
@@ -55,7 +77,9 @@ The RSeQC package is licensed under the GNU GPL v3 license.
 .. image:: http://rseqc.sourceforge.net/_static/logo.png
 
 .. _RSeQC: http://rseqc.sourceforge.net/
-
-
+]]>
     </help>
+
+    <expand macro="citations" />
+
 </tool>
