@@ -1,41 +1,53 @@
-<tool id="rseqc_infer_experiment" name="Infer Experiment" version="2.4">
+<tool id="rseqc_infer_experiment" name="Infer Experiment" version="2.4galaxy1">
     <description>speculates how RNA-seq were configured</description>
-    <requirements>
-        <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.4">rseqc</requirement>
-    </requirements>
-    <command>
-        infer_experiment.py -i $input -r $refgene 
-            #if $sample_size.boolean
-                -s $sample_size.size
-            #end if
 
-            > $output
-    </command>
+    <macros>
+        <import>rseqc_macros.xml</import>
+    </macros>
+
+    <expand macro="requirements_nor" />
+
     <stdio>
         <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
         <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
     </stdio>
+
+    <version_command><![CDATA[infer_experiment.py --version]]></version_command>
+
+    <command><![CDATA[
+        infer_experiment.py -i $input -r $refgene
+            --sample-size $sample_size
+            --mapq $mapq
+            > $output
+            ]]>
+    </command>
+
     <inputs>
-        <param name="input" type="data" format="bam,sam" label="Input BAM/SAM file" />
-        <param name="refgene" type="data" format="bed" label="Reference gene model in bed format" />
-        <conditional name="sample_size">
-            <param name="boolean" type="boolean" label="Modify usable sampled reads" value="false" />
-            <when value="true">
-                <param name="size" type="integer" label="Number of usable sampled reads (default = 200000)" value="200000" />
-            </when>
-        </conditional>
+        <param name="input" type="data" format="bam,sam" label="Input BAM/SAM file" help="(--input-file)"/>
+        <param name="refgene" type="data" format="bed" label="Reference gene model in bed format" help="(--refgene)" />
+        <param name="sample_size" type="integer" label="Number of reads sampled from SAM/BAM file (default = 200000)" value="200000" help="(--sample-size)"/>
+        <param name="mapq" type="integer" label="Minimum mapping quality (default=30)" help="Minimum phred scale mapping quality to consider a read 'uniquely mapped' (--mapq)" value="30" />
     </inputs>
+
     <outputs>
         <data format="txt" name="output" />
     </outputs>
-    <help>
+
+    <tests>
+        <test>
+            <param name="input" value="pairend_strandspecific_51mer_hg19_chr1_1-100000.bam"/>
+            <param name="refgene" value="hg19_RefSeq_chr1_1-100000.bed"/>
+            <output name="output" file="output.infer_experiment.txt"/>
+        </test>
+    </tests>
+
+    <help><![CDATA[
 infer_experiment.py
 +++++++++++++++++++
 
 This program is used to speculate how RNA-seq sequencing were configured, especially how
 reads were stranded for strand-specific RNA-seq data, through comparing reads' mapping
-information to the underneath gene model. 
+information to the underneath gene model.
 
 
 Inputs
@@ -101,13 +113,13 @@ Example Output
 **Example2** ::
 
     ============================================================
-    This is PairEnd Data 
+    This is PairEnd Data
 
     Fraction of reads explained by "1++,1--,2+-,2-+": 0.9644 ::
-    Fraction of reads explained by "1+-,1-+,2++,2--": 0.0356    
+    Fraction of reads explained by "1+-,1-+,2++,2--": 0.0356
     Fraction of reads explained by other combinations: 0.0000
     ============================================================
-    
+
 *Conclusion*: We can infer that this is a strand-specific RNA-seq data. strandness of read1 is consistent with that of gene model, while strandness of read2 is opposite to the strand of reference gene model.
 
 **Example3** ::
@@ -125,7 +137,7 @@ Example Output
 
 -----
 
-About RSeQC 
+About RSeQC
 +++++++++++
 
 The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
@@ -136,6 +148,9 @@ The RSeQC package is licensed under the GNU GPL v3 license.
 
 .. _RSeQC: http://rseqc.sourceforge.net/
 
-
+]]>
     </help>
+
+    <expand macro="citations" />
+
 </tool>
