@@ -1,12 +1,22 @@
-<tool id="rseqc_RPKM_count" name="RPKM Count" version="2.4">
+<tool id="rseqc_RPKM_count" name="RPKM Count" version="2.4galaxy1">
     <description>calculates raw count and RPKM values for transcript at exon, intron, and mRNA level</description>
+
+    <macros>
+        <import>rseqc_macros.xml</import>
+    </macros>
+
     <requirements>
-        <requirement type="package" version="1.7.1">numpy</requirement>
-        <requirement type="package" version="2.4">rseqc</requirement>
+        <expand macro="requirement_package_numpy" />
+        <expand macro="requirement_package_rseqc" />
     </requirements>
-    <command>
-        ln -s "${input}" "local_input.bam" &amp;&amp;
-        ln -s "${input.metadata.bam_index}" "local_input.bam.bai" &amp;&amp;
+
+    <expand macro="stdio" />
+
+    <version_command><![CDATA[RPKM_count.py --version]]></version_command>
+
+    <command><![CDATA[
+        ln -s "${input}" "local_input.bam" &&
+        ln -s "${input.metadata.bam_index}" "local_input.bam.bai" &&
         RPKM_count.py -i "local_input.bam" -o output -r $refgene
 
         #if str($strand_type.strand_specific) == "pair"
@@ -27,22 +37,18 @@
             #end if
         #end if
 
-        #if $skiphits
-            -u
+        #if $multihits.skipmultihits
+            --skip-multi-hits
+            --mapq=$multihits.mapq
         #end if
 
-        #if $onlyexonic
-            -e
-        #end if
-
+        $onlyexonic
+        ]]>
     </command>
-    <stdio>
-        <exit_code range="1:" level="fatal" description="An error occured during execution, see stderr and stdout for more information" />
-        <regex match="[Ee]rror" source="both" description="An error occured during execution, see stderr and stdout for more information" />
-    </stdio>
+
     <inputs>
-        <param name="input" type="data" format="bam" label="input bam/sam file" />
-        <param name="refgene" type="data" format="bed" label="Reference gene model" />
+        <param name="input" type="data" label="Input .bam File" format="bam" help="(--input-file)"/>
+        <param name="refgene" type="data" format="bed" label="reference gene model" help="(--refgene)"/>
         <conditional name="strand_type">
             <param name="strand_specific" type="select" label="Strand-specific?" value="None">
                 <option value="none">None</option>
@@ -50,26 +56,44 @@
                 <option value="single">Single-End RNA-seq</option>
             </param>
             <when value="pair">
-                <param name="pair_type" type="select" display="radio" label="Pair-End Read Type (format: mapped --> parent)" value="sd">
+                <param name="pair_type" type="select" display="radio" label="Pair-End Read Type (format: mapped --> parent)" value="sd" help="(--strand)">
                     <option value="sd"> read1 (positive --> positive; negative --> negative), read2 (positive --> negative; negative --> positive)</option>
                     <option value="ds">read1 (positive --> negative; negative --> positive), read2 (positive --> positive; negative --> negative)</option>
                 </param>
             </when>
             <when value="single">
-                <param name="single_type" type="select" display="radio" label="Single-End Read Type (format: mapped --> parent)" value="s">
+                <param name="single_type" type="select" display="radio" label="Single-End Read Type (format: mapped --> parent)" value="s" help="(--strand)">
                     <option value="s">positive --> positive; negative --> negative</option>
                     <option value="d">positive --> negative; negative --> positive</option>
                 </param>
             </when>
             <when value="none"></when>
         </conditional>
-        <param name="skiphits" type="boolean" value="false" label="Skip Multiple Hit Reads" />
-        <param name="onlyexonic" type="boolean" value="false" label="Only use exonic (UTR exons and CDS exons) reads, otherwise use all reads" />
+
+        <conditional name="multihits">
+            <param name="skipmultihits" type="boolean" label="Skip Multiple Hit Reads/Only Use Uniquely Mapped Reads" value="false" help="(--skip-multi-hits)" />
+            <when value="true">
+                <param name="mapq" value="30" type="integer" label="Minimum mapping quality for an alignment to be called 'uniquly mapped'" help="(--mapq)" />
+            </when>
+            <when value="false" />
+        </conditional>
+
+        <param name="onlyexonic" type="boolean" value="false" truevalue="--only-exonic" falsevalue="" label="Only use exonic (UTR exons and CDS exons) reads, otherwise use all reads" help="(--only-exonic)"/>
     </inputs>
+
     <outputs>
         <data format="xls" name="outputxls" from_work_dir="output_read_count.xls"/>
     </outputs>
-    <help>
+
+    <tests>
+        <test>
+            <param name="input" value="pairend_strandspecific_51mer_hg19_chr1_1-100000.bam"/>
+            <param name="refgene" value="hg19_RefSeq_chr1_1-100000.bed"/>
+            <output name="outputxls" file="output_read_count.xls"/>
+        </test>
+    </tests>
+
+    <help><![CDATA[
 RPKM_count.py
 +++++++++++++
 
@@ -77,7 +101,7 @@ Given a BAM file and reference gene model, this program will calculate the raw c
 values for transcript at exon, intron and mRNA level. For strand specific RNA-seq data,
 program will assign read to its parental gene according to strand rule, if you don't know the
 strand rule, run infer_experiment.py. Please note that chromosome ID, genome cooridinates
-should be concordant between BAM and BED files. 
+should be concordant between BAM and BED files.
 
 Inputs
 ++++++++++++++
@@ -97,7 +121,7 @@ Options
 Skip Multiple Hit Reads
     Use Multiple hit reads or use only uniquely mapped reads.
 
-Only use exonic reads 
+Only use exonic reads
     Renders program only used exonic (UTR exons and CDS exons) reads, otherwise use all reads.
 
 Sample Output
@@ -113,10 +137,10 @@ chr1    29213602   29213722   NM_001166007_exon_1      0      '+'             16
 chr1    29313959   29314417   NM_001166007_exon_2      0      '+'            1699            4               74.158    0.175
 chr1    29319841   29320054   NM_001166007_exon_3      0      '+'             528             1               49.554    0.094
 =====   ========   ========   =====================    =====  ===========   =============   =============   ========  =========
-    
+
 -----
 
-About RSeQC 
+About RSeQC
 +++++++++++
 
 The RSeQC_ package provides a number of useful modules that can comprehensively evaluate high throughput sequence data especially RNA-seq data. "Basic modules" quickly inspect sequence quality, nucleotide composition bias, PCR bias and GC bias, while "RNA-seq specific modules" investigate sequencing saturation status of both splicing junction detection and expression estimation, mapped reads clipping profile, mapped reads distribution, coverage uniformity over gene body, reproducibility, strand specificity and splice junction annotation.
@@ -126,7 +150,9 @@ The RSeQC package is licensed under the GNU GPL v3 license.
 .. image:: http://rseqc.sourceforge.net/_static/logo.png
 
 .. _RSeQC: http://rseqc.sourceforge.net/
-
-
+]]>
     </help>
+
+    <expand macro="citations" />
+
 </tool>
