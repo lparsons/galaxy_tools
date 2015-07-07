@@ -17,13 +17,13 @@
     <version_command><![CDATA[bam_stat.py --version]]></version_command>
 
     <command><![CDATA[
-        bam_stat.py -i $input -q $mapqual 2> $output
+        bam_stat.py -i $input -q $mapq 2> $output
         ]]>
     </command>
 
     <inputs>
-        <param name="input" type="data" label="Input .bam/.sam File" format="bam,sam" />
-        <param label="Minimum mapping quality (default=30" type="integer" value="30" name="mapqual" />
+        <param name="input" type="data" label="Input .bam File" format="bam" help="(--input-file)"/>
+        <param name="mapq" value="30" type="integer" label="Minimum mapping quality for an alignment to be called 'uniquly mapped'" help="(--mapq)" />
     </inputs>
 
     <outputs>
@@ -42,7 +42,8 @@ bam_stat.py
 +++++++++++
 
 This program is used to calculate reads mapping statistics from provided BAM
-file.  This script determines "uniquely mapped reads" from `mapping quality`_,
+file.  This script determines "uniquely mapped reads" from `mapping quality
+<http://genome.sph.umich.edu/wiki/Mapping_Quality_Scores>`_,
 which quality the probability that a read is misplaced (Do NOT confused with
 sequence quality, sequence quality measures the probability that a base-calling
 was wrong) .
@@ -54,7 +55,7 @@ Input BAM/SAM file
 	Alignment file in BAM/SAM format.
 
 Minimum mapping quality
-	Minimum mapping quality for an alignment to be called “uniquely mapped” (default=30)
+	Minimum mapping quality for an alignment to be called "uniquely mapped" (default=30)
 
 Output
 ++++++++++++++

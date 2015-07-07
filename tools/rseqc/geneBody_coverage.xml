@@ -36,12 +36,12 @@
     </command>
 
     <inputs>
-        <param name="input" type="data" label="Additional input .bam files" format="bam" />
-        <repeat name="additionalinputs" title="Input .bam file">
-            <param name="file" type="data" label="Input .bam file" format="bam" />
+        <param name="input" type="data" label="Input .bam File" format="bam" help="(--input-file)"/>
+        <repeat name="additionalinputs" title="Additional input .bam files">
+            <param name="file" type="data" label="Additional input .bam file" format="bam" />
         </repeat>
-        <param name="refgene" type="data" label="Reference Genome" format="bed" />
-        <param name="minimum_length" type="integer" value="100" label="Minimum mRNA length" help="Minimum mRNA length (bp). mRNA that are shorter than this value will be skipped (default is 100)." />
+        <param name="refgene" type="data" format="bed" label="reference gene model" help="(--refgene)"/>
+        <param name="minimum_length" type="integer" value="100" label="Minimum mRNA length in bp (default: 100)" help="mRNA that are shorter than this value will be skipped (--minimum_length)." />
     </inputs>
 
     <outputs>

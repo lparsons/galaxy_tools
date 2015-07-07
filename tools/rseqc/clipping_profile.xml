@@ -23,7 +23,7 @@
     </command>
 
     <inputs>
-        <param name="input" type="data" label="Input .bam/.sam File" format="bam,sam" />
+        <param name="input" type="data" label="Input .bam File" format="bam" help="(--input-file)"/>
     </inputs>
 
     <outputs>
