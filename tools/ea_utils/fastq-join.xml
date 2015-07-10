@@ -1,0 +1,65 @@
+<tool id="fastq_join" name="fastq-join" version="0.1.1">
+    <description> - Joins two paired-end reads on the overlapping ends</description>
+    <requirements>
+        <requirement type="package" version="1.1.2-484">ea-utils</requirement>
+    </requirements>
+    <command>
+        fastq-join 
+        -v '$splitChar'
+        -p $pctMaxDiff
+        -m $minOverlap
+        #if $stitchLengthReport:
+        -r $outputStitchLengthReport
+        #end if
+        $read1
+        $read2
+        -o $outputUnmatched1 -o $outputUnmatched2 -o $outputJoined 
+    </command>
+    <inputs>
+        <param format="fastq, fastqillumina, fastqsanger, fastqsolexa" name="read1" type="data" label="Read 1 Fastq" />
+        <param format="fastq, fastqillumina, fastqsanger, fastqsolexa" name="read2" type="data" label="Read 2 Fastq" />
+        <param name="splitChar" type="text" value=" " label="Split read ids on this character" help="Default is space ' ' for Illumina reads" />
+        <param name="pctMaxDiff" type="float" value="8" min="0" max="100" label="Maximum percentage difference between matching segments" />
+        <param name="minOverlap" type="integer" value="6" min="1" label="Minimum length of matching segements" />
+        <param name="stitchLengthReport" type="boolean" value="False" label="Output verbose stitch length report" />
+    </inputs>
+
+    <outputs>
+        <data format="input" format_source="read1" name="outputJoined" label="${tool.name} on ${on_string} (joined)"/>
+        <data format="input" format_source="read1" name="outputUnmatched1" label="${tool.name} on ${on_string} (unmatched1)"/>
+        <data format="input" format_source="read2" name="outputUnmatched2" label="${tool.name} on ${on_string} (unmatched2)"/>
+        <data format="tabular" name="outputStitchLengthReport" label="${tool.name} on ${on_string} (stitch length report)">
+            <filter>stitchLengthReport</filter>
+        </data>
+    </outputs>
+
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Unknown error occurred" />
+    </stdio>
+
+    <tests>
+        <test>
+            <param name="read1" value="test_read1.fastq" />
+            <param name="read2" value="test_read3.fastq" />
+            <output name="outputJoined" file="testout.join.fastq" />
+            <output name="outputUnmatched1" file="testout.un1.fastq" />
+            <output name="outputUnmatched2" file="testout.un2.fastq" />
+        </test>
+    </tests>
+
+    <help>
+Overview
+--------
+fastq-join joins two paired-end reads on the overlapping ends.
+
+Split read ids character: Verifies that the 2 files probe id's match up to char C. Use ' ' for Illumina reads.
+
+Maximum difference is the maximum allowed percentage of bases that differ in the matching region.
+
+Minimum overlap is the minimum number of bases that must overlap (with no more than the maximum difference) for reads to be joined.
+
+Verbose stitch length report is a report for each joined paired of reads showing how large the overlapping section was.
+
+This tool uses sqr(distance)/len for anchored alignment quality algorithm. It's a good measure of anchored alignment quality, akin to squared-deviation for means.  This tool uses the fastq-join program that is part of the ea-utils suite. See http://code.google.com/p/ea-utils/wiki/FastqJoin for details.
+    </help>
+</tool>
