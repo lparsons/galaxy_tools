@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="ea-utils" version="1.1.2-484">
+        <repository name="package_ea_utils_1_1_2_484" owner="lparsons" />
+    </package>
+</tool_dependency>

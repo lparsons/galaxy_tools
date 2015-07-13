@@ -1,0 +1,11 @@
+categories:
+ - Fastq Manipulation
+description: fastq-join tool to merge overlapping paired-end reads (from ea-utils package)
+homepage_url: https://code.google.com/p/ea-utils/
+long_description: |
+
+  Merges paired-end reads that overlap due to the fact they were generated from a fragment shorter than the sum of the paired-end read lengths.
+
+name: fastq_join
+owner: lparsons
+remote_repository_url: https://github.com/lparsons/galaxy_tools/tree/master/tools/fastq_join

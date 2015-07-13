@@ -1,9 +1,15 @@
 <tool id="sam_stats" name="sam-stats" version="0.1">
     <description> - Compute statistics from SAM or BAM files</description>
+
     <requirements>
         <requirement type="package" version="1.1.2-484">ea-utils</requirement>
     </requirements>
-    <command>
+
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Unknown error occurred" />
+    </stdio>
+
+    <command><![CDATA[
         sam-stats
         $trackMultAlign
         $reportAllChr
@@ -15,8 +21,10 @@
         #end if
         -S $histBinSize
         $input
-        &gt; $samStats
+        > $samStats
+    ]]>
     </command>
+
     <inputs>
         <param format="sam, bam" name="input" type="data" label="SAM/BAM File" />
         <param name="trackMultAlign" type="boolean" value="False" truevalue="-D" falsevalue="" label="Keep track of multiple alignments (slower!)" />
@@ -32,10 +40,6 @@
         </data>
     </outputs>
 
-    <stdio>
-        <exit_code range="1:" level="fatal" description="Unknown error occurred" />
-    </stdio>
-
     <tests>
         <test>
             <param name="input" value="test.sam" />
@@ -43,14 +47,14 @@
         </test>
     </tests>
 
-    <help>
+    <help><![CDATA[
 Overview
 --------
 sam-stats computes varius statics on SAM/BAM alignment files.
 
 Complete Stats::
 
-  &lt;STATS&gt;           : mean, max, stdev, median, Q1 (25 percentile), Q3
+  <STATS>           : mean, max, stdev, median, Q1 (25 percentile), Q3
   reads             : # of entries in the sam file, might not be # reads
   phred             : phred scale used
   bsize             : # reads used for qual stats
@@ -62,14 +66,14 @@ Complete Stats::
   ins rate          : insert bases / total bases
   del rate          : deleted bases / total bases
   pct mismatch      : percent of reads that have mismatches
-  len &lt;STATS&gt;       : read length stats, ignored if fixed-length
-  mapq &lt;STATS&gt;      : stats for mapping qualities
-  insert &lt;STATS&gt;    : stats for insert sizes
-  &lt;CHR&gt;           : percentage of mapped bases per chr, followed by a signature
+  len <STATS>       : read length stats, ignored if fixed-length
+  mapq <STATS>      : stats for mapping qualities
+  insert <STATS>    : stats for insert sizes
+  <CHR>           : percentage of mapped bases per chr, followed by a signature
 
 Subsampled stats (1M reads max)::
 
-  base qual &lt;STATS&gt; : stats for base qualities
+  base qual <STATS> : stats for base qualities
   A,T,C,G       : base percentages
 
 Meaning of the per-chromosome signature:
@@ -79,5 +83,27 @@ Meaning of the per-chromosome signature:
 See http://code.google.com/p/ea-utils/wiki/SamStatsDetails for more information on each stat, how it's calculated and what it means.
 
 This tool uses the sam-stats program that is part of the ea-utils suite. See http://code.google.com/p/ea-utils/wiki/SamStats for details.
+]]>
     </help>
+
+    <citations>
+        <citation type="bibtex">
+            @article{aronesty_comparison_2013,
+                title = {Comparison of {Sequencing} {Utility} {Programs}},
+                volume = {7},
+                issn = {18750362},
+                url = {http://benthamopen.com/ABSTRACT/TOBIOIJ-7-1},
+                doi = {10.2174/1875036201307010001},
+                language = {en},
+                number = {1},
+                urldate = {2015-07-10},
+                journal = {The Open Bioinformatics Journal},
+                author = {Aronesty, Erik},
+                month = jan,
+                year = {2013},
+                pages = {1--8}
+            }
+        </citation>
+    </citations>
+
 </tool>

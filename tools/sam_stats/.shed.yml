@@ -1,0 +1,11 @@
+categories:
+ - SAM
+description: sam-stats generates basic sam/bam stats (from ea-utils package)
+homepage_url: https://code.google.com/p/ea-utils/
+long_description: |
+
+ Generates a number of useful statistics about SAM/BAM files.  In particular, it can output the number of unique read ids aligned (as opposed to the number of alignments), which can be very useful.
+
+name: sam_stats
+owner: lparsons
+remote_repository_url: https://github.com/lparsons/galaxy_tools/tree/master/tools/sam_stats

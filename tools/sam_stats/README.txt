@@ -1,6 +1,6 @@
 == ea-utils Galaxy Wrapper ==
 
-This is a Galaxy wrapper for some ea-utils tools, fastq-join and sam-stats.
+This is a Galaxy wrapper for the sam-stats tools from the ea-utils suite.
 
 ** Installation **
 
@@ -16,4 +16,3 @@ Restart the Galaxy server.
 The ea-utils package and associated documentation can be found at: http://code.google.com/p/ea-utils/
 
 The galaxy wrapper code was written by Lance Parsons (lparsons@princeton.edu), Lewis-Sigler Institute for Integrative Genomics, Princeton University.
-The code is housed on BitBucket at: https://bitbucket.org/lance_parsons/ea_utils_galaxy_wrapper
