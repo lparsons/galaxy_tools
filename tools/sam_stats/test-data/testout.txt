@@ -1,6 +1,7 @@
 reads	100
-version	1.32
+version	1.38.763
 mapped reads	11
+pct align	11.000000
 mapped bases	377
 phred	33
 forward	0
