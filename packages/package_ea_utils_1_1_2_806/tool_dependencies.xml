@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <!--
+    <package name="gsl" version="1.16">
+        <repository name="package_gsl_1_16" owner="iuc" prior_installation_required="True"/>
+    </package>
+    -->
+    <package name="ea-utils" version="1.1.2-806">
+        <install version="1.0">
+            <actions>
+                <action type="download_by_url" target_filename="ea-utils.1.1.2-806.tar.gz">https://drive.google.com/uc?export=download&amp;id=0B7KhouP0YeRAc2xackxzRnFrUEU</action>
+                <!--
+                <action type="set_environment_for_install">
+                    <repository name="package_gsl_1_16" owner="iuc">
+                        <package name="gsl" version="1.1.16" />
+                    </repository>
+                </action>
+                -->
+                <!-- Unable to get varcall to compile properly (even with gsl dependency), we don't need it, so skip -->
+                <action type="shell_command">sed -i.bak 's/\(^BIN=.*\)varcall$\|\$(BINDIR)\/varcall/\1/' Makefile</action>
+                <action type="shell_command">PREFIX=$INSTALL_DIR make install</action>
+                <action type="set_environment">
+                    <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+                </action>
+            </actions>
+        </install>
+        <readme>
+        </readme>
+    </package>
+</tool_dependency>

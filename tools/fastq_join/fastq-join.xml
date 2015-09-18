@@ -1,8 +1,8 @@
-<tool id="fastq_join" name="fastq-join" version="0.1.1">
+<tool id="fastq_join" name="fastq-join" version="1.1.2-806">
     <description> - Joins two paired-end reads on the overlapping ends</description>
 
     <requirements>
-        <requirement type="package" version="1.1.2-484">ea-utils</requirement>
+        <requirement type="package" version="1.1.2-806">ea-utils</requirement>
     </requirements>
 
     <stdio>
