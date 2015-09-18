@@ -1,0 +1,57 @@
+<tool id="gtfToBed12" name="Convert GTF to BED12" version="0.1.0">
+    <requirements>
+        <package name="ucsc_tools" version="312"/>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+
+    <command><![CDATA[
+        gtfToGenePred $gtf_file temp.genePred &&
+        genePredToBed temp.genePred $bed_file
+        ]]>
+    </command>
+    <inputs>
+        <param name="gtf_file" type="data" format="gtf">
+            <label>GTF File to convert</label>
+        </param>
+    </inputs>
+    <outputs>
+        <data format="bed" name="bed_file" metadata_source="gtf_file" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="gtf_file" value="gtf2bed_test.gtf"/>
+            <output name="bed_file" file="gtf2bed_test.bed"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+        Converts a GTF_ file to a BED12_ formatted file using UCSC tools from Jim Kent.
+
+        .. _GTF: https://genome.ucsc.edu/FAQ/FAQformat.html#format4
+        .. _BED12: https://genome.ucsc.edu/FAQ/FAQformat.html#format1
+        ]]>
+    </help>
+    <citations>
+        <citation type="bibtex">
+@article{kent_human_2002,
+    title = {The {Human} {Genome} {Browser} at {UCSC}},
+    volume = {12},
+    issn = {1088-9051, 1549-5469},
+    url = {http://genome.cshlp.org/content/12/6/996},
+    doi = {10.1101/gr.229102},
+    abstract = {As vertebrate genome sequences near completion and research refocuses to their analysis, the issue of effective genome annotation display becomes critical. A mature web tool for rapid and reliable display of any requested portion of the genome at any scale, together with several dozen aligned annotation tracks, is provided athttp://genome.ucsc.edu. This browser displays assembly contigs and gaps, mRNA and expressed sequence tag alignments, multiple gene predictions, cross-species homologies, single nucleotide polymorphisms, sequence-tagged sites, radiation hybrid data, transposon repeats, and more as a stack of coregistered tracks. Text and sequence-based searches provide quick and precise access to any region of specific interest. Secondary links from individual features lead to sequence details and supplementary off-site databases. One-half of the annotation tracks are computed at the University of California, Santa Cruz from publicly available sequence data; collaborators worldwide provide the rest. Users can stably add their own custom tracks to the browser for educational or research purposes. The conceptual and technical framework of the browser, its underlying MYSQL database, and overall use are described. The web site currently serves over 50,000 pages per day to over 3000 different users.},
+    language = {en},
+    number = {6},
+    urldate = {2015-09-18},
+    journal = {Genome Research},
+    author = {Kent, W. James and Sugnet, Charles W. and Furey, Terrence S. and Roskin, Krishna M. and Pringle, Tom H. and Zahler, Alan M. and Haussler, {and} David},
+    month = jun,
+    year = {2002},
+    pmid = {12045153},
+    pages = {996--1006},
+    file = {Full Text PDF:/Users/lparsons/Library/Application Support/Firefox/Profiles/thd2t4je.default/zotero/storage/C9J3ZPWF/Kent et al. - 2002 - The Human Genome Browser at UCSC.pdf:application/pdf;Snapshot:/Users/lparsons/Library/Application Support/Firefox/Profiles/thd2t4je.default/zotero/storage/CCFNEJX6/996.html:text/html}
+}
+        </citation>
+    </citations>
+</tool>
