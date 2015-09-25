@@ -16,9 +16,8 @@ Requires Python 2.7
 
 The RSeQC package and associated documentation can be found at: http://rseqc.sourceforge.net/
 
-The galaxy wrapper code was written by 
+The galaxy wrapper code was written by
     Nilesh Kavthekar, School of Engineering and Applied Sciences, University of Pennsylvania, Class of 2016
-Modified by 
+Modified by
     Lance Parsons, Lewis-Sigler Institute for Integrative Genomics, Princeton University,
     Bjorn Gruning, University of Freiburg, bjoern.gruening@gmail.com
-The development of the wrapper code is housed on BitBucket at: https://bitbucket.org/lance_parsons/rseqc_galaxy_wrapper
