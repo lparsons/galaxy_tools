@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<tool id="collapse_samples" name="collapse samples" version="1.9.1">
+	<description>Collapse samples in a BIOM table and mapping file.</description>
+	<requirements>
+		<requirement type="package">qiime</requirement>
+	</requirements>
+	<command>collapse_samples.py -b $input_biom_fp -m $mapping_fp --output_biom_fp=$output_biom_fp --output_mapping_fp=$output_mapping_fp --collapse_fields=$collapse_fields
+#if str($collapse_mode) != 'None':
+ --collapse_mode=$collapse_mode
+#end if
+
+#if $normalize:
+ --normalize
+#end if
+</command>
+	<inputs>
+		<param label="-b/--input_biom_fp: the biom table containing the samples to be collapsed" name="input_biom_fp" optional="False" type="data"/>
+		<param label="-m/--mapping_fp: the sample metdata mapping file" name="mapping_fp" optional="False" type="data"/>
+		<param label="--collapse_fields: comma-separated list of fields to collapse on" name="collapse_fields" optional="False" type="text"/>
+		<param label="--collapse_mode: the mechanism for collapsing counts within groups; valid options are: mean, sum, random, median, first. [default: sum]" name="collapse_mode" optional="True" type="select">
+			<option selected="True" value="None">Selection is Optional</option>
+			<option value="mean">mean</option>
+			<option value="sum">sum</option>
+			<option value="random">random</option>
+			<option value="median">median</option>
+			<option value="first">first</option>
+		</param>
+		<param label="--normalize: Normalize observation counts to relative abundances, so the counts within each sample sum to 1.0. [default: False]" name="normalize" selected="False" type="boolean"/>
+	</inputs>
+	<outputs>
+		<data format="txt" name="output_biom_fp"/>
+		<data format="txt" name="output_mapping_fp"/>
+	</outputs>
+	<help>Collapse samples in a BIOM table and mapping file. Values in the BIOM table are collapsed in one of several different ways; see the available options for --collapse_mode. Values in the mapping file are collapsed by grouping the values if they differ for the grouped samples, and by providing the single value if they don't differ for the grouped samples.
+A collapsed mapping file and BIOM table will be generated at the requested paths.</help>
+</tool>

@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<tool id="compute_taxonomy_ratios" name="compute taxonomy ratios" version="1.9.1">
+	<description>Compute the log ratio abundance of specified taxonomic groups.</description>
+	<requirements>
+		<requirement type="package">qiime</requirement>
+	</requirements>
+	<command>compute_taxonomy_ratios.py
+#if str($input) != 'None':
+ -i $input
+#end if
+ -o $output
+#if str($increased):
+ --increased=$increased
+#end if
+
+#if str($decreased):
+ --decreased=$decreased
+#end if
+
+#if str($index) != 'None':
+ -e $index
+#end if
+
+#if str($name):
+ -n $name
+#end if
+
+#if str($mapping_file) != 'None':
+ -m $mapping_file
+#end if
+
+#if str($key):
+ -k $key
+#end if
+
+#if $show_indices:
+ -s
+#end if
+</command>
+	<inputs>
+		<param label="-i/--input: The input BIOM table [REQUIRED if not passing -s]" name="input" optional="True" type="data"/>
+		<param default="None" label="--increased: Comma-separated list of taxa whose abundances are included in the numerator of the ratio [REQUIRED if not passing -s or -e]" name="increased" optional="True" type="text"/>
+		<param default="None" label="--decreased: Comma-separated list of taxa whose abundances are included in the denominator of the ratio [REQUIRED if not passing -s or -e]" name="decreased" optional="True" type="text"/>
+		<param label="-e/--index: Apply an existing index. Options are: md [REQUIRED if not passing -s or --increased and --decreased]" name="index" optional="True" type="select">
+			<option selected="True" value="None">Selection is Optional</option>
+			<option value="md">md</option>
+		</param>
+		<param default="None" label="-n/--name: Column name for the index in the output file [default: 'index', or value passed as -e if provided]" name="name" optional="True" type="text"/>
+		<param label="-m/--mapping_file: A mapping file containing data that should be included in the output file [default: no additional mapping file data is included in output]" name="mapping_file" optional="True" type="data"/>
+		<param default="taxonomy" label="-k/--key: Metadata key to use for computing index [default: taxonomy]" name="key" optional="True" type="text"/>
+		<param label="-s/--show_indices: List known indices and exit [default: False]" name="show_indices" selected="False" type="boolean"/>
+	</inputs>
+	<outputs>
+		<data format="txt" name="output"/>
+	</outputs>
+	<help>Compute the log ratio abundance of specified taxonomic groups. This method is based on the microbial dysbiosis index described in Gevers et al. 2014: http://www.ncbi.nlm.nih.gov/pubmed/24629344
+By default, a minimal QIIME mapping file is created containing two columns: SampleID and the index. If -m is provided, the information in that mapping file is merged into the default output mapping file.</help>
+</tool>

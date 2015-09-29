@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<tool id="identify_paired_differences" name="identify paired differences" version="1.9.1">
+	<description>Generate plots and stats to test for change in some data point(s) with a state change on a per-individual basis.</description>
+	<requirements>
+		<requirement type="package">qiime</requirement>
+	</requirements>
+	<command>identify_paired_differences.py -m $mapping_fp -o $output_dir -t $state_category -x $state_values -c $individual_id_category
+#if $ymin:
+ --ymin=$ymin
+#end if
+
+#if $ymax:
+ --ymax=$ymax
+#end if
+
+#if str($metadata_categories):
+ --metadata_categories=$metadata_categories
+#end if
+
+#if str($observation_ids):
+ --observation_ids=$observation_ids
+#end if
+
+#if str($biom_table_fp) != 'None':
+ -b $biom_table_fp
+#end if
+
+#if str($valid_states):
+ -s $valid_states
+#end if
+
+#if str($line_color):
+ --line_color=$line_color
+#end if
+</command>
+	<inputs>
+		<param label="-m/--mapping_fp: the input metadata map filepath" name="mapping_fp" optional="False" type="data"/>
+		<param label="-t/--state_category: the mapping file column name to plot change over (usually has values like &quot;pre-treatment&quot; and &quot;post-treatment&quot;)" name="state_category" optional="False" type="text"/>
+		<param label="-x/--state_values: ordered list of state values to test change over (defines direction of graphs, generally something like &quot;pre-treatment,post-treatment&quot;). currently limited to two states." name="state_values" optional="False" type="text"/>
+		<param label="-c/--individual_id_category: the mapping file column name containing each individual's identifier (usually something like &quot;personal_identifier&quot;)" name="individual_id_category" optional="False" type="text"/>
+		<param default="None" label="--ymin: set the minimum y-value across plots [default: determined on a per-plot basis]" name="ymin" optional="True" type="float"/>
+		<param default="None" label="--ymax: set the maximum y-value across plots [default: determined on a per-plot basis]" name="ymax" optional="True" type="float"/>
+		<param default="None" label="--metadata_categories: ordered list of the mapping file column names to test for paired differences (usually something like &quot;StreptococcusAbundance,Phylogenetic Diversity&quot;) [default: None]" name="metadata_categories" optional="True" type="text"/>
+		<param default="None" label="--observation_ids: ordered list of the observation ids to test for paired differences if a biom table is provided (usually something like &quot;otu1,otu2&quot;) [default: compute paired differences for all observation ids]" name="observation_ids" optional="True" type="text"/>
+		<param default="None" label="-b/--biom_table_fp: path to biom table to use for computing paired differences [default: None]" name="biom_table_fp" optional="True" type="data"/>
+		<param default="None" label="-s/--valid_states: string describing samples that should be included based on their metadata (e.g. 'TreatmentResponse:Improved') [default: all samples are included in analysis]" name="valid_states" optional="True" type="text"/>
+		<param default="black" label="--line_color: color of lines in plots, useful if generating multiple plots in different runs of this script to overlay on top of one another. these can be specified as matplotlib color names, or as html hex strings [default: black]" name="line_color" optional="True" type="text"/>
+	</inputs>
+	<outputs>
+		<data format="txt" name="output_dir"/>
+	</outputs>
+	<help>This script provides a framework for paired-difference testing (i.e., analysis of data generated under a pre/post experimental design). In a pre/post experimental design, individuals are sampled before and after some 'treatment'. This code plots differences in values in the sample metadata (i.e., the mapping file) or observation counts in a BIOM table, and runs a (Bonferroni-corrected) one sample t-test on each sample metadata category or BIOM observation to determine if the mean of each distribution of pre/post differences differs from zero. If 'None' appears for the t score and p-values, this often means that the distribution of differences contained no variance, so the t-test could not be run. This can happen, for example, if the value passed for --valid_states is so restrictive that only a single sample is retained for analysis.
+The output of this script is plots of pre/post differences and associated statistics.</help>
+</tool>

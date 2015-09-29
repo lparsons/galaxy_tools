@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<tool id="split_otu_table" name="split otu table" version="1.9.1">
+	<description>Split a biom table into one table per combination of values found in the specified fields in the mapping file.</description>
+	<requirements>
+		<requirement type="package">qiime</requirement>
+	</requirements>
+	<command>split_otu_table.py -i $biom_table_fp -m $mapping_fp -f $fields -o split_otu_table_output
+#if $suppress_mapping_file_output:
+ --suppress_mapping_file_output
+#end if
+;
+compress_path.py -i split_otu_table_output -o $output_dir
+</command>
+	<inputs>
+		<param label="-i/--biom_table_fp: The input biom table file path." name="biom_table_fp" optional="False" type="data"/>
+		<param label="-m/--mapping_fp: The mapping file path." name="mapping_fp" optional="False" type="data"/>
+		<param label="-f/--fields: Mapping columns to split biom table on, comma separated." name="fields" optional="False" type="text"/>
+		<param label="--suppress_mapping_file_output: Do not write out split mapping files." name="suppress_mapping_file_output" selected="False" type="boolean"/>
+	</inputs>
+	<outputs>
+		<data format="tgz" name="output_dir"/>
+	</outputs>
+	<help>This script splits a biom table based on the cartesian product of the values
+found in the mapping fields specified. It accepts any number of mapping fields
+to split on. As an example assume the following was your mapping file data:
+
+SampleID       Color       Habitat       Age
+S1             Red         Stream        10
+S2             Blue        Stream        20
+S3             Blue        Lake          30
+S4             Red         Stream        30
+
+If we wanted to split a corresponding biom table by the 'Color' and 'Habitat'
+fields simultanesouly, we would return 3 biom tables with the following samples
+corresponding to the following groups:
+
+(S1, S4): (Red, Stream)
+(S2): (Blue, Stream)
+(S3): (Blue, Lake)
+
+Combinations which would result in no samples -- in our example (Red, Lake) -- 
+are excluded and do not produce (empty) biom tables. The script optionally
+produces split mapping files as well. 
+
+The naming convention for split files is (assuming two fields):
+
+input_table.biom -&gt; input_table__field1_value1_field2_value2__.biom
+input_mapping.txt -&gt; input_mapping__field1_value1_field2_value2__.txt
+
+So, from our example above:
+
+input_table.biom -&gt; (input_table__Color_Red_Habitat_Stream__.biom,
+                     input_table__Color_Blue_Habitat_Stream__.biom,
+                     input_table__Color_Blue_Habitat_Lake__.biom)
+
+</help>
+</tool>

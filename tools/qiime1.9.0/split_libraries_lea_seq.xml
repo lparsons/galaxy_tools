@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<tool id="split_libraries_lea_seq" name="split libraries lea seq" version="1.9.1">
+	<description>Demultiplexes Low-Error Amplicon Sequencing (LEA-Seq) data</description>
+	<requirements>
+		<requirement type="package">qiime</requirement>
+	</requirements>
+	<command>split_libraries_lea_seq.py
+#def list_dict_to_string(list_dict):
+	#set $file_list = list_dict[0]['additional_input'].__getattr__('file_name')
+	#for d in list_dict[1:]:
+		#set $file_list = $file_list + ',' + d['additional_input'].__getattr__('file_name')
+	#end for
+	#return $file_list
+#end def
+ -i $list_dict_to_string($input_files_sequence_read_fps) -o split_libraries_lea_seq_output -m $mapping_fp
+#if str($barcode_type):
+ -b $barcode_type
+#end if
+
+#if $max_barcode_errors:
+ --max_barcode_errors=$max_barcode_errors
+#end if
+
+#if $min_consensus:
+ --min_consensus=$min_consensus
+#end if
+
+#if $max_cluster_ratio:
+ --max_cluster_ratio=$max_cluster_ratio
+#end if
+
+#if $min_difference_in_bcs:
+ --min_difference_in_bcs=$min_difference_in_bcs
+#end if
+
+#if $fwd_length:
+ --fwd_length=$fwd_length
+#end if
+
+#if $rev_length:
+ --rev_length=$rev_length
+#end if
+
+#if $min_difference_in_clusters:
+ --min_difference_in_clusters=$min_difference_in_clusters
+#end if
+
+#if $min_reads_per_random_bc:
+ --min_reads_per_random_bc=$min_reads_per_random_bc
+#end if
+
+#if str($header_barcode_column):
+ --header_barcode_column=$header_barcode_column
+#end if
+
+#if str($reverse_primer_column):
+ --reverse_primer_column=$reverse_primer_column
+#end if
+;
+compress_path.py -i split_libraries_lea_seq_output -o $output_dir
+</command>
+	<inputs>
+		<repeat name="input_files_sequence_read_fps" optional="False" title="sequence_read_fps">
+			<param label="-i/--sequence_read_fps: the forward and reverse sequence read fastq files (comma-separated)" name="additional_input" type="data"/>
+		</repeat>
+		<param label="-m/--mapping_fp: metadata mapping file" name="mapping_fp" optional="False" type="data"/>
+		<param default="golay_12" label="-b/--barcode_type: the type of barcode used. This can be an integer, e.g. 6 for length 6 barcodes, or golay_12 for golay error-correcting barcodes. Error correction will only be applied for golay_12 barcodes [default: golay_12]" name="barcode_type" optional="True" type="text"/>
+		<param default="1.5" label="--max_barcode_errors: the maximum allowable number of errors in the barcode if passing --barcode_type golay_12 [default: 1.5]" name="max_barcode_errors" optional="True" type="float"/>
+		<param default="6.6" label="--min_consensus: threshold for consensus score: the minimum score allowable at any position in sequence. where the score is calulated as: occurence of base in consensus sequence/ total sequences[default: 6.6]" name="min_consensus" optional="True" type="float"/>
+		<param default="2.5" label="--max_cluster_ratio: threshold for cluster ratio: the maximum allowable cluster ratio above which you need to find the consensus sequence for the given sequences.[default: 2.5]" name="max_cluster_ratio" optional="True" type="float"/>
+		<param default="0.86" label="--min_difference_in_bcs: threshold for selecting unique barcodes: Barcodes that are more similar to each other than this value will be discarded.[default: 0.86]" name="min_difference_in_bcs" optional="True" type="float"/>
+		<param default="64" label="--fwd_length: removes phasing from forward readby truncating it to standard length for the region[default: 64]" name="fwd_length" optional="True" type="integer"/>
+		<param default="77" label="--rev_length: removes phasing from reverse readby truncating it to standard length for the region[default: 77]" name="rev_length" optional="True" type="integer"/>
+		<param default="0.98" label="--min_difference_in_clusters: the percent identity threshold while using uclust to cluster sequence reads, which is helpfulin measuring quality of sequencing.[default: 0.98]" name="min_difference_in_clusters" optional="True" type="float"/>
+		<param default="1" label="--min_reads_per_random_bc: minimum number of reads per randombarcode, attempts to remove random barcodes that are sequencing errors of true barcodesmight be useful in saving memory and time[default: 1]" name="min_reads_per_random_bc" optional="True" type="integer"/>
+		<param default="BarcodeSequence" label="--header_barcode_column: header of barcode column[default: BarcodeSequence]" name="header_barcode_column" optional="True" type="text"/>
+		<param default="ReversePrimer" label="--reverse_primer_column: header of reverse primer column[default: ReversePrimer]" name="reverse_primer_column" optional="True" type="text"/>
+	</inputs>
+	<outputs>
+		<data format="tgz" name="output_dir"/>
+	</outputs>
+	<help>
+Implements Low-Error Amplicon Sequencing (LEA-Seq) method, described in:
+
+Faith, Jeremiah J., et al.
+The long-term stability of the human gut microbiota.Science 341.6141 (2013).
+
+This method is based on redundant sequencing of a set of linear PCR template
+extensions of 16S rRNA genes. The oligonucleotide primer that is used for
+PCR template extensions is labeled with a random barcode
+5' to the universal 16S rRNA primer sequence. This PCR pool is then
+amplified with exponential PCR, using primers that specifically
+amplify only the linear PCR molecules. An index primer is added to
+the amplicons along with a primer specific for each sample.
+This exponential PCR pool is then sequenced redundantly (20x coverage).
+The resulting sequences are separated by sample, using the index sequence.
+The amplicon sequences within each sample are separated by the random
+barcodes. The large number of reads for each barcode helps to create an
+error-corrected consensus sequence for the initial template molecule.
+
+The %prog generates: A fasta file called seqs.fna which contains error corrected consensus sequence for the template DNA</help>
+</tool>

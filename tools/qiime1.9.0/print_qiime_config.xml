@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<tool id="print_qiime_config" name="print qiime config" version="1.9.1">
+	<description>Print and optionally test QIIME configuration details</description>
+	<requirements>
+		<requirement type="package">qiime</requirement>
+	</requirements>
+	<command>print_qiime_config.py
+#if $test:
+ -t
+#end if
+
+#if $qiime_base_install:
+ -b
+#end if
+
+#if $qiime_full_install:
+ -f
+#end if
+
+#if $haiku:
+ --haiku
+#end if
+</command>
+	<inputs>
+		<param label="-t/--test: Test the QIIME install and configuration [default: False]" name="test" selected="False" type="boolean"/>
+		<param label="-b/--qiime_base_install: SUPPRESSHELP" name="qiime_base_install" selected="False" type="boolean"/>
+		<param label="-f/--qiime_full_install: If passed, report on dependencies required for the QIIME full install. To perform tests of the QIIME full install, you must also pass -t. [default: False]" name="qiime_full_install" selected="False" type="boolean"/>
+		<param label="--haiku: SUPPRESSHELP" name="haiku" selected="False" type="boolean"/>
+	</inputs>
+	<outputs/>
+	<help>Print QIIME configuration details and optionally perform tests of the QIIME base or full install.
+Prints QIIME configuration details to standard output.</help>
+</tool>

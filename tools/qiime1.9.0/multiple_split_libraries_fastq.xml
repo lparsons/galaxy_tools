@@ -1,0 +1,99 @@
+<?xml version="1.0" ?>
+<tool id="multiple_split_libraries_fastq" name="multiple split libraries fastq" version="1.9.1">
+	<description>Run split_libraries_fastq.py on multiple files.</description>
+	<requirements>
+		<requirement type="package">qiime</requirement>
+	</requirements>
+	<command>uncompress_tgz.py -i $input_dir -o multiple_split_libraries_fastq_input;
+multiple_split_libraries_fastq.py -i multiple_split_libraries_fastq_input -o multiple_split_libraries_fastq_output
+#if str($demultiplexing_method) != 'None':
+ -m $demultiplexing_method
+#end if
+
+#if str($parameter_fp) != 'None':
+ -p $parameter_fp
+#end if
+
+#if str($read_indicator):
+ --read_indicator=$read_indicator
+#end if
+
+#if str($barcode_indicator):
+ --barcode_indicator=$barcode_indicator
+#end if
+
+#if str($mapping_indicator):
+ --mapping_indicator=$mapping_indicator
+#end if
+
+#if str($mapping_extensions):
+ --mapping_extensions=$mapping_extensions
+#end if
+
+#if str($sampleid_indicator):
+ --sampleid_indicator=$sampleid_indicator
+#end if
+
+#if $include_input_dir_path:
+ --include_input_dir_path
+#end if
+
+#if $remove_filepath_in_name:
+ --remove_filepath_in_name
+#end if
+
+#if str($leading_text):
+ --leading_text=$leading_text
+#end if
+
+#if str($trailing_text):
+ --trailing_text=$trailing_text
+#end if
+
+#if $print_only:
+ -w
+#end if
+;
+compress_path.py -i multiple_split_libraries_fastq_output -o $output_dir
+</command>
+	<inputs>
+		<param label="-i/--input_dir: Input directory of directories or fastq files." name="input_dir" type="data"/>
+		<param label="-m/--demultiplexing_method: Method for demultiplexing. Can either be &quot;sampleid_by_file&quot; or &quot;mapping_barcode_files&quot;. With the sampleid_by_file option, each fastq file (and/or directory name) will be used to generate the --sample_ids value passed to split_libraries_fastq.py. The mapping_barcode_files option will search for barcodes and mapping files that match the input read files [default: sampleid_by_file]" name="demultiplexing_method" optional="True" type="select">
+			<option selected="True" value="None">Selection is Optional</option>
+			<option value="sampleid_by_file">sampleid_by_file</option>
+			<option value="mapping_barcode_files">mapping_barcode_files</option>
+		</param>
+		<param label="-p/--parameter_fp: path to the parameter file, which specifies changes to the default behavior of split_libraries_fastq.py. See http://www.qiime.org/documentation/file_formats.html#qiime-parameters [default: split_libraries_fastq.py defaults will be used]" name="parameter_fp" optional="True" type="data"/>
+		<param default="_R1_" label="--read_indicator: Substring to search for to indicate read files [default: _R1_]" name="read_indicator" optional="True" type="text"/>
+		<param default="_I1_" label="--barcode_indicator: Substring to search for to indicate barcode files [default: _I1_]" name="barcode_indicator" optional="True" type="text"/>
+		<param default="_mapping_" label="--mapping_indicator: Substring to search for to indicate mapping files [default: _mapping_]" name="mapping_indicator" optional="True" type="text"/>
+		<param default="txt,tsv" label="--mapping_extensions: Comma-separated list of file extensions used to identify mapping files. Only applies when --demultiplexing_method is &quot;mapping_barcode_files&quot; [default: txt,tsv]" name="mapping_extensions" optional="True" type="text"/>
+		<param default="_" label="--sampleid_indicator: Text in fastq filename before this value will be used as output sample ids [default: _]" name="sampleid_indicator" optional="True" type="text"/>
+		<param label="--include_input_dir_path: Include the input directory name in the output sample id name. Useful in cases where the file names are repeated in input folders [default: False]" name="include_input_dir_path" selected="False" type="boolean"/>
+		<param label="--remove_filepath_in_name: Disable inclusion of the input filename in the output sample id names. Must use --include_input_dir_path if this option is enabled [default: False]" name="remove_filepath_in_name" selected="False" type="boolean"/>
+		<param default="" label="--leading_text: Leading text to add to each split_libraries_fastq.py command [default: no leading text added]" name="leading_text" optional="True" type="text"/>
+		<param default="" label="--trailing_text: Trailing text to add to each split_libraries_fastq.py command [default: no trailing text added]" name="trailing_text" optional="True" type="text"/>
+		<param label="-w/--print_only: Print the commands but don't call them -- useful for debugging [default: False]" name="print_only" selected="False" type="boolean"/>
+	</inputs>
+	<outputs>
+		<data format="tgz" name="output_dir"/>
+	</outputs>
+	<help>
+This script runs split_libraries_fastq.py on data that are already demultiplexed
+(split up according to sample, with one sample per file). The script supports
+the following types of input:
+
+- a directory containing many files, where each file is named on a per-sample
+  basis (with different prefixes before the read number)
+- a directory containing many directories, where each directory is named on a
+  per-sample basis
+
+This script assumes that the leading characters before the read indicator
+(see --read_indicator) are matched between the read, barcode, and mapping files.
+For example, sample1_L001_R1_001.fastq.gz, sample1_L001_I1_001.fastq.gz,
+sample1_L001_mapping_001.txt would be matched up if &quot;R1&quot; is the read indicator,
+&quot;I1&quot; is the barcode indicator, and &quot;mapping&quot; is the mapping file indicator.
+
+
+The output of running split_libraries_fastq.py on many input files. See script description for more details.</help>
+</tool>

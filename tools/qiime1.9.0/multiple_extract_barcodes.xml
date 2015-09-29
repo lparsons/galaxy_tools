@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<tool id="multiple_extract_barcodes" name="multiple extract barcodes" version="1.9.1">
+	<description>Run extract_barcodes.py on multiple files.</description>
+	<requirements>
+		<requirement type="package">qiime</requirement>
+	</requirements>
+	<command>uncompress_tgz.py -i $input_dir -o multiple_extract_barcodes_input;
+multiple_extract_barcodes.py -i multiple_extract_barcodes_input -o multiple_extract_barcodes_output
+#if str($parameter_fp) != 'None':
+ -p $parameter_fp
+#end if
+
+#if $paired_data:
+ --paired_data
+#end if
+
+#if str($read1_indicator):
+ --read1_indicator=$read1_indicator
+#end if
+
+#if str($read2_indicator):
+ --read2_indicator=$read2_indicator
+#end if
+
+#if str($leading_text):
+ --leading_text=$leading_text
+#end if
+
+#if str($trailing_text):
+ --trailing_text=$trailing_text
+#end if
+
+#if $include_input_dir_path:
+ --include_input_dir_path
+#end if
+
+#if $remove_filepath_in_name:
+ --remove_filepath_in_name
+#end if
+
+#if $print_only:
+ -w
+#end if
+;
+compress_path.py -i multiple_extract_barcodes_output -o $output_dir
+</command>
+	<inputs>
+		<param label="-i/--input_dir: Input directory of directories, or directory of paired fastq files." name="input_dir" type="data"/>
+		<param label="-p/--parameter_fp: path to the parameter file, which specifies changes to the default behavior of extract_barcodes.py. See http://www.qiime.org/documentation/file_formats.html#qiime-parameters [default: extract_barcodes.py defaults will be used]" name="parameter_fp" optional="True" type="data"/>
+		<param label="--paired_data: Turn this option on if paired data are to be used. The type of paired data for extract_barcodes.py should be specified with -p. Forward and reverse reads will be searched for via the --read1_indicator and --read2_indicator parameters [default: False]" name="paired_data" selected="False" type="boolean"/>
+		<param default="_R1_" label="--read1_indicator: Substring to search for to indicate read 1 [default: _R1_]" name="read1_indicator" optional="True" type="text"/>
+		<param default="_R2_" label="--read2_indicator: Substring to search for to indicate read 2 [default: _R2_]" name="read2_indicator" optional="True" type="text"/>
+		<param default="" label="--leading_text: Leading text to add to each extract_barcodes.py command [default: no leading text added]" name="leading_text" optional="True" type="text"/>
+		<param default="" label="--trailing_text: Trailing text to add to each extract_barcodes.py command [default: no trailing text added]" name="trailing_text" optional="True" type="text"/>
+		<param label="--include_input_dir_path: Include the input directory name in the output directory path. Useful in cases where the file names are repeated in input folders [default: False]" name="include_input_dir_path" selected="False" type="boolean"/>
+		<param label="--remove_filepath_in_name: Disable inclusion of the input filename in the output directory names. Must use --include_input_dir_path if this option is enabled [default: False]" name="remove_filepath_in_name" selected="False" type="boolean"/>
+		<param label="-w/--print_only: Print the commands but don't call them -- useful for debugging [default: False]" name="print_only" selected="False" type="boolean"/>
+	</inputs>
+	<outputs>
+		<data format="tgz" name="output_dir"/>
+	</outputs>
+	<help>This script runs extract_barcodes.py on data that are already demultiplexed
+(split up according to sample, with one sample per file). The script
+supports the following types of input:
+
+- a directory containing many files, where each file is named on a per-sample
+  basis
+- a directory containing many directories, where each directory is named on a
+  per-sample basis
+ 
+The script assumes that the leading/trailing characters before/after the read
+number indicator (see --read1_indicator) are matched between forward and
+reverse reads. For example:
+
+- S0_L001_R1_001.fastq.gz and S0_L001_R2_001.fastq.gz would be matched up reads
+- S0_L002_R1_00X.fastq.gz and S0_L002_R2_00X.fastq.gz would be matched up reads
+
+The output directory used for each call to extract_barcodes.py uses the base
+name of the input read 1 fastq file (a single directory would be problematic
+since the output names for extract_barcodes.py can be the same for different
+calls). Use the parameter --include_input_dir_path to also include the input
+directory name in the output directory path, which may be preferable in the
+case of an input folder of folders, and --remove_filepath_in_name can be used
+in this case to prevent the input read 1 fastq file base name from being used
+as part of the output directory name.
+
+
+The output of running extract_barcodes.py on many input files. See script description for more details.</help>
+</tool>

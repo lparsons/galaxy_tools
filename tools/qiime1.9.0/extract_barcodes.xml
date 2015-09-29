@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<tool id="extract_barcodes" name="extract barcodes" version="1.9.1">
+	<description>This script is designed to format fastq sequence and barcode data so they are compatible with split_libraries_fastq.py (see http://qiime.org/tutorials/processing_illumina_data.html).</description>
+	<requirements>
+		<requirement type="package">qiime</requirement>
+	</requirements>
+	<command>extract_barcodes.py -f $fastq1
+#if str($fastq2) != 'None':
+ -r $fastq2
+#end if
+ -o extract_barcodes_output
+#if str($input_type) != 'None':
+ -c $input_type
+#end if
+
+#if $bc1_len:
+ -l $bc1_len
+#end if
+
+#if $bc2_len:
+ -L $bc2_len
+#end if
+
+#if $rev_comp_bc1:
+ --rev_comp_bc1
+#end if
+
+#if $rev_comp_bc2:
+ --rev_comp_bc2
+#end if
+
+#if str($char_delineator):
+ -s $char_delineator
+#end if
+
+#if $switch_bc_order:
+ --switch_bc_order
+#end if
+
+#if str($mapping_fp) != 'None':
+ -m $mapping_fp
+#end if
+
+#if $attempt_read_reorientation:
+ -a
+#end if
+
+#if $disable_header_match:
+ -d
+#end if
+;
+compress_path.py -i extract_barcodes_output -o $output_dir
+</command>
+	<inputs>
+		<param label="-f/--fastq1: input fastq filepath. This file is considered read 1." name="fastq1" optional="False" type="data"/>
+		<param default="None" label="-r/--fastq2: input fastq filepath. This file is considered read 2. [default: None]" name="fastq2" optional="True" type="data"/>
+		<param label="-c/--input_type: Specify the input type. barcode_single_end: Input is a single fastq file, that starts with the barcode sequence. barcode_paired_end: Input is a pair of fastq files (--fastq1 and --fastq2) that each begin with a barcode sequence. The barcode for fastq1 will be written first, followed by the barcode from fastq2. barcode_paired_stitched: Input is a single fastq file that has barcodes at the beginning and end. The barcode from the beginning of the read will be written first followed by the barcode from the end of the read, unless the order is switched with --switch_bc_order. barcode_in_label: Input is a one (--fastq1) or two (--fastq2) fastq files with the barcode written in the labels. [default: barcode_single_end]" name="input_type" optional="True" type="select">
+			<option selected="True" value="None">Selection is Optional</option>
+			<option value="barcode_single_end">barcode_single_end</option>
+			<option value="barcode_paired_end">barcode_paired_end</option>
+			<option value="barcode_paired_stitched">barcode_paired_stitched</option>
+			<option value="barcode_in_label">barcode_in_label</option>
+		</param>
+		<param default="6" label="-l/--bc1_len: Specify the length, in base pairs, of barcode 1. This applies to the --fastq1 file and all options specified by --input_type [default: 6]" name="bc1_len" optional="True" type="integer"/>
+		<param default="6" label="-L/--bc2_len: Specify the length, in base pairs, of barcode 2. This applies to the --fastq2 file and options &quot;barcode_paired_end&quot;, &quot;barcode_paired_stitched&quot;, and &quot;barcode_in_label&quot; for the --input_type [default: 6]" name="bc2_len" optional="True" type="integer"/>
+		<param label="--rev_comp_bc1: Reverse complement barcode 1 before writing [default: False]" name="rev_comp_bc1" selected="False" type="boolean"/>
+		<param label="--rev_comp_bc2: Reverse complement barcode 2 before writing [default: False]" name="rev_comp_bc2" selected="False" type="boolean"/>
+		<param default=":" label="-s/--char_delineator: Character in fastq label that should immediately precede the barcode sequence. The length of the barcode is specified by the --bc1_len (and optionally --bc2_len if paired end files are used) parameter. [default: :]" name="char_delineator" optional="True" type="text"/>
+		<param label="--switch_bc_order: Reverse barcode order written when using the -c barcode_paired_stitched option. [default: False]" name="switch_bc_order" selected="False" type="boolean"/>
+		<param default="None" label="-m/--mapping_fp: Filepath of mapping file. NOTE: Must contain a header line indicating SampleID in the first column and BarcodeSequence in the second, LinkerPrimerSequence in the third and a ReversePrimer column before the final Description column. Needed for --attempt_read_orientation option. [default: None]" name="mapping_fp" optional="True" type="data"/>
+		<param label="-a/--attempt_read_reorientation: Will attempt to search for the forward and reverse primer in the read and adjust the sequence orientation to match the orientation of the forward primer. An exact match for the  forward and reverse complemented versions of the primers are tested for, and sequences are reverse complemented, if necessary, before writing. Sequences without an exact match are written to a separate output fastq file, labeled as _no_primer_match.fastq. [default: False]" name="attempt_read_reorientation" selected="False" type="boolean"/>
+		<param label="-d/--disable_header_match: Enable this option to suppress header matching between input fastq files.[default: False]" name="disable_header_match" selected="False" type="boolean"/>
+	</inputs>
+	<outputs>
+		<data format="tgz" name="output_dir"/>
+	</outputs>
+	<help>A variety of data formats are possible, depending upon how one utilized sequencing primers, designed primer constructs (e.g., partial barcodes on each end of the read), or processed the data (e.g., barcodes were put into the sequence labels rather than the reads). See various input examples below.
+In the output directory, there will be fastq files (barcode file, and one or two reads files)</help>
+</tool>
