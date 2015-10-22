@@ -18,11 +18,12 @@
 
 #  Modified by Lance Parsons (lparsons@princeton.edu)
 #	2011-03-15	Adapted to allow galaxy to determine filetype
+#	2015-10-21	Updated to make compatible with OSX (BSD sed)
 #
 #This is a shell script wrapper for 'fastx_barcode_splitter.pl'
 #
 # 1. Output files are saved at the dataset's files_path directory.
-#    
+#
 # 2. 'fastx_barcode_splitter.pl' outputs a textual table.
 #    This script turns it into pretty HTML with working URL
 #    (so lazy users can just click on the URLs and get their files)
@@ -68,7 +69,7 @@ PUBLICURL=""
 BASEPATH="$OUTPUT_PATH/"
 #PREFIX="$BASEPATH"`date "+%Y-%m-%d_%H%M__"`"${LIBNAME}__"
 PREFIX="$BASEPATH""${LIBNAME}_"
-SUFFIX="_visible_$FILETYPE"
+SUFFIX="_visible.$FILETYPE"
 DIRECTORY=$(cd `dirname $0` && pwd)
 
 RESULTS=`gzip -cdf "$FASTQ_FILE" | $DIRECTORY/fastx_barcode_splitter.pl --bcfile "$BARCODE_FILE" --prefix "$PREFIX" --suffix "$SUFFIX" "$@"`
@@ -80,11 +81,8 @@ fi
 # Convert the textual tab-separated table into simple HTML table,
 # with the local path replaces with a valid URL
 #HTMLSUMMARY=${PREFIX}stats_visible_html
-echo "<html><body><table border=1>" 
-echo "$RESULTS" | sed -r "s|$BASEPATH(.*)|\\1|" | sed '
-i<tr><td>
-s|\t|</td><td>|g
-a<\/td><\/tr>
-'
+echo "<html><body><table border=1>"
+echo "$RESULTS" | sed "s|$BASEPATH\\(.*\\)|<a href=\"\\1\">\\1<\\a>|" | \
+perl -n -i -e '$_ =~ s|\t|</td><td>|g; print "<tr><td>\n$_</td></tr>\n"'
 echo "<p>"
 echo "</table></body></html>"
