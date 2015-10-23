@@ -80,14 +80,18 @@ One additional FASTQ file will be created (the 'unmatched' file), where sequence
 
 The output of this tool is an HTML file, displaying the split counts and the file names.
 In addition, each fastq file produced will be loaded into the galaxy history automatically.
-
-
-------
-
-This tool is based on `FASTX-toolkit`__ by Assaf Gordon.
-
- .. __: http://hannonlab.cshl.edu/fastx_toolkit/
 ]]>
-</help>
-<!-- FASTX-barcode-splitter is part of the FASTX-toolkit, by A.Gordon (gordon@cshl.edu) -->
+	</help>
+
+	<!-- FASTX-barcode-splitter is part of the FASTX-toolkit, by A.Gordon (gordon@cshl.edu) -->
+	<citations>
+	    <citation type="bibtex">
+			@misc{gordon_fastx-toolkit_????,
+				title = {{FASTX}-{Toolkit}},
+				url = {http://hannonlab.cshl.edu/fastx_toolkit/index.html},
+				author = {Gordon, Assaf}
+			}
+		</citation>
+	</citations>
+
 </tool>
