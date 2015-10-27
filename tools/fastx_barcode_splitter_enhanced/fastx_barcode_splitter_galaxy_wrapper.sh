@@ -83,6 +83,6 @@ fi
 #HTMLSUMMARY=${PREFIX}stats_visible_html
 echo "<html><body><table border=1>"
 echo "$RESULTS" | sed "s|$BASEPATH\\(.*\\)|<a href=\"\\1\">\\1<\\a>|" | \
-perl -n -i -e '$_ =~ s|\t|</td><td>|g; print "<tr><td>\n$_</td></tr>\n"'
+perl -n -e '$_ =~ s|\t|</td><td>|g; print "<tr><td>\n$_</td></tr>\n"'
 echo "<p>"
 echo "</table></body></html>"
