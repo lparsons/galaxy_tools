@@ -82,7 +82,7 @@ fi
 # with the local path replaces with a valid URL
 #HTMLSUMMARY=${PREFIX}stats_visible_html
 echo "<html><body><table border=1>"
-echo "$RESULTS" | sed "s|$BASEPATH\\(.*\\)|<a href=\"\\1\">\\1<\\a>|" | \
+echo "$RESULTS" | sed "s|$BASEPATH\\(.*\\)|<a href=\"\\1\">\\1</a>|" | \
 perl -n -e '$_ =~ s|\t|</td><td>|g; print "<tr><td>\n$_</td></tr>\n"'
 echo "<p>"
 echo "</table></body></html>"
