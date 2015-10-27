@@ -1,0 +1,9 @@
+categories: ['Fasta Manipulation', 'Fastq Manipulation']
+description: Fastx Barcode Splitter that allows barcodes to be in a separate index read and loads the results into the Galaxy history
+long_description: |
+
+ Based on the Fastx Toolkit barcode splitter, with minor modifications to allow barcodes to be in a separate index read and to load the resulting fastq files into the Galaxy history.
+ The wrapper is based on the Fastx Barcode Splitter wrapper written by the Galaxy team.
+name: fastx_barcode_splitter_enhanced
+owner: lparsons
+remote_repository_url: https://github.com/lparsons/galaxy_tools/tree/master/tools/fastx_barcode_splitter_enhanced
