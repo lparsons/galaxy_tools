@@ -1,4 +1,4 @@
-<tool id="fastq_join" name="fastq-join" version="1.1.2-806">
+<tool id="fastq_join" name="fastq-join" version="1.1.2-806.1">
     <description> - Joins two paired-end reads on the overlapping ends</description>
 
     <requirements>
@@ -11,21 +11,39 @@
 
     <command><![CDATA[
         fastq-join
-        -v '$splitChar'
-        -p $pctMaxDiff
-        -m $minOverlap
+        -v "${splitChar}"
+        -p "${pctMaxDiff}"
+        -m "${minOverlap}"
         #if $stitchLengthReport:
-        -r $outputStitchLengthReport
+        -r "${outputStitchLengthReport}"
         #end if
-        $read1
-        $read2
-        -o $outputUnmatched1 -o $outputUnmatched2 -o $outputJoined
+        #if str( $input_type.input_type_selector ) == 'paired':
+            "${input_type.read1}"
+            "${input_type.read2}"
+        #else:
+            "${input_type.input_collection.forward}"
+            "${input_type.input_collection.reverse}"
+        #end if
+        -o "${outputUnmatched1}" -o "${outputUnmatched2}" -o "${outputJoined}"
         ]]>
     </command>
 
     <inputs>
-        <param format="fastq, fastqillumina, fastqsanger, fastqsolexa" name="read1" type="data" label="Read 1 Fastq" />
-        <param format="fastq, fastqillumina, fastqsanger, fastqsolexa" name="read2" type="data" label="Read 2 Fastq" />
+      <conditional name="input_type">
+            <param name="input_type_selector" type="select" label="Dataset type">
+              <option value="paired">Paired-end</option>
+              <option value="paired_collection">Paired-end Dataset Collection</option>
+            </param>
+            <when value="paired">
+                <param format="fastqsanger" name="read1" type="data" label="Read 1 Fastq" help="Nucleotide-space: Must have PHRED-scaled quality values with offset 33 (fastqsanger)." />
+                <param format="fastqsanger" name="read2" type="data" label="Read 2 Fastq" help="Nucleotide-space: Must have PHRED-scaled quality values with offset 33 (fastqsanger)." />
+            </when>
+            <when value="paired_collection">
+                <param name="input_collection" format="fastqsanger"
+                    type="data_collection" collection_type="paired"
+                    label="FASTQ Paired Dataset" help="Nucleotide-space: Must have PHRED-scaled quality values with offset 33 (fastqsanger)." />
+            </when>
+        </conditional>
         <param name="splitChar" type="text" value=" " label="Split read ids on this character" help="Default is space ' ' for Illumina reads" />
         <param name="pctMaxDiff" type="float" value="8" min="0" max="100" label="Maximum percentage difference between matching segments" />
         <param name="minOverlap" type="integer" value="6" min="1" label="Minimum length of matching segements" />
@@ -33,9 +51,9 @@
     </inputs>
 
     <outputs>
-        <data format_source="read1" name="outputJoined" label="${tool.name} on ${on_string} (joined)"/>
-        <data format_source="read1" name="outputUnmatched1" label="${tool.name} on ${on_string} (unmatched1)"/>
-        <data format_source="read2" name="outputUnmatched2" label="${tool.name} on ${on_string} (unmatched2)"/>
+        <data format="fastqsanger" name="outputJoined" label="${tool.name} on ${on_string} (joined)"/>
+        <data format="fastqsanger" name="outputUnmatched1" label="${tool.name} on ${on_string} (unmatched1)"/>
+        <data format="fastqsanger" name="outputUnmatched2" label="${tool.name} on ${on_string} (unmatched2)"/>
         <data format="tabular" name="outputStitchLengthReport" label="${tool.name} on ${on_string} (stitch length report)">
             <filter>stitchLengthReport</filter>
         </data>
@@ -43,8 +61,8 @@
 
     <tests>
         <test>
-            <param name="read1" value="test_read1.fastq" />
-            <param name="read2" value="test_read3.fastq" />
+            <param name="read1" value="test_read1.fastq" ftype="fastqsanger" />
+            <param name="read2" value="test_read3.fastq" ftype="fastqsanger" />
             <output name="outputJoined" file="testout.join.fastq" />
             <output name="outputUnmatched1" file="testout.un1.fastq" />
             <output name="outputUnmatched2" file="testout.un2.fastq" />
