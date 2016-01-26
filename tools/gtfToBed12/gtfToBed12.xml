@@ -17,7 +17,7 @@
         </param>
     </inputs>
     <outputs>
-        <data format="bed" name="bed_file" metadata_source="gtf_file" />
+        <data format="bed12" name="bed_file" metadata_source="gtf_file" />
     </outputs>
     <tests>
         <test>
