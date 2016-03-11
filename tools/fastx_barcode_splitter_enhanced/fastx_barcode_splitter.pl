@@ -316,7 +316,7 @@ sub strip_read_id {
 	my $read_id = shift;
 	my $stripped_read_id = $read_id;
 	if ($read_id_check_strip_characters) {
-		if ($read_id =~ /@([a-zA-Z0-9_-]+):([0-9]+):([a-zA-Z0-9]+):([0-9]+):([0-9]+):([0-9]+):([0-9]+) ([0-9]+):([YN]):([0-9]+):([ACGT]+){0,1}/) { # CASAVA 1.8+
+		if ($read_id =~ /@([^:]+):([0-9]+):([^:]+):([0-9]+):([0-9]+):([0-9]+):([0-9]+) ([0-9]+):([YN]):([0-9]+):([ACGT]+){0,1}/) { # CASAVA 1.8+
 			my @parts = split(/ /,$read_id);
 			$stripped_read_id = $parts[0];
 		} else { # CASAVA 1.7 and earlier
