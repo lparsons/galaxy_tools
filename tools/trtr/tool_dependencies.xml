@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tool_dependency>
+	<package name="trtr" version="1.0">
+		<repository changeset_revision="ada63ad7c4d2" name="package_trtr_0_1" owner="mrvollger" toolshed="https://toolshed.g2.bx.psu.edu" />
+	</package>
+</tool_dependency>
