@@ -1,0 +1,9 @@
+categories: ["Fastq Manipulation", "Sequence Analysis", "Text Manipulation", "Variant Analysis"]
+description: "TRTR Trim Reads of Tandem Repeats. Recommended before calling SNPs."
+long_description: |
+    This tool removes tandem repeats from ends of unaligned sequencing reads (leaving one copy). This prevents reads that don't span the repeated region from overlapping, leading to innaccurate SNPs calls. The maximimum repeat length is adjustable (use 1 to trim only homopolymers). The "aggressive" option should not be touched in general. Setting to 0 will prevent the program from trimming to exactly 1 copy of the repeat, instead leaving between 1 and 2 copies. This could also be a useful first step before assembly. More testing needs to be done.
+name: trtr
+owner: mrvollger
+homepage_url: https://github.com/mvollger/trtrR
+remote_repository_url: https://github.com/lparsons/galaxy_tools/tree/master/tools/trtr
+type: unrestricted
