@@ -7,13 +7,13 @@ fastx_barcode_splitter_galaxy_wrapper.sh $BARCODE $input "split/" $input.extensi
 #else:
     $refBarcodeLocation.EOL
 #end if
-> $output
+> $summary
 ]]>
   </command>
 
   <inputs>
     <param format="txt" name="BARCODE" type="data" label="Barcodes to use" />
-    <param format="fasta,fastqsanger,fastqsolexa,fastqillumina" name="input" type="data" label="Library to split" />
+    <param format="fasta,fastq,fastqsanger,fastqsolexa,fastqillumina" name="input" type="data" label="Library to split" />
 
     <conditional name="refBarcodeLocation">
       <param name="barcodeLocation" type="select" label="Barcodes found at">
@@ -39,12 +39,13 @@ fastx_barcode_splitter_galaxy_wrapper.sh $BARCODE $input "split/" $input.extensi
   </inputs>
 
   <outputs>
-        <data format="html" name="output">
-            <discover_datasets pattern="__designation_and_ext__" directory="split" visible="true" label="${tool.name}: ${designation}"/>
-        </data>
+    <data format="html" name="summary" label="${tool.name} on ${on_string}: Summary" />
+    <collection name="split_output" type="list" format_source="input" label="${tool.name} on ${on_string}">
+      <discover_datasets pattern="__designation_and_ext__" directory="split" visible="false" label="${designation}"/>
+    </collection>
   </outputs>
 
-    <tests>
+  <tests>
     <test>
       <!-- Split a FASTQ file -->
       <param name="BARCODE" value="fastx_barcode_splitter1.txt" />
@@ -52,14 +53,16 @@ fastx_barcode_splitter_galaxy_wrapper.sh $BARCODE $input "split/" $input.extensi
       <param name="barcodeLocation" value="bol" />
       <param name="mismatches" value="2" />
       <param name="partial" value="0" />
-            <output name="output" file="fastx_barcode_splitter1.out">
-                <discovered_dataset designation="BC1" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC1.out" />
-                <discovered_dataset designation="BC2" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC2.out" />
-                <discovered_dataset designation="BC3" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC3.out" />
-                <discovered_dataset designation="BC4" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC4.out" />
-                <discovered_dataset designation="unmatched" ftype="fastqsolexa" file="fastx_barcode_splitter1_unmatched.out" />
-            </output>
+      <output name="summary" file="fastx_barcode_splitter1.out" />
+      <collection name="output" type="list">
+        <discovered_dataset designation="BC1" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC1.out" />
+        <discovered_dataset designation="BC2" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC2.out" />
+        <discovered_dataset designation="BC3" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC3.out" />
+        <discovered_dataset designation="BC4" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC4.out" />
+        <discovered_dataset designation="unmatched" ftype="fastqsolexa" file="fastx_barcode_splitter1_unmatched.out" />
+      </collection>
     </test>
+
     <test>
       <!-- Split a FASTQ file, using separate index read -->
       <param name="BARCODE" value="fastx_barcode_splitter1.txt" />
@@ -68,13 +71,14 @@ fastx_barcode_splitter_galaxy_wrapper.sh $BARCODE $input "split/" $input.extensi
       <param name="barcodeLocation" value="idxfile" />
       <param name="mismatches" value="2" />
       <param name="partial" value="0" />
-            <output name="output" file="fastx_barcode_splitter1.out">
-                <discovered_dataset designation="BC1" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC1.out" />
-                <discovered_dataset designation="BC2" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC2.out" />
-                <discovered_dataset designation="BC3" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC3.out" />
-                <discovered_dataset designation="BC4" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC4.out" />
-                <discovered_dataset designation="unmatched" ftype="fastqsolexa" file="fastx_barcode_splitter1_unmatched.out" />
-            </output>
+      <output name="output" file="fastx_barcode_splitter1.out" />
+      <collection name="split_output" type="list">
+        <discovered_dataset designation="BC1" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC1.out" />
+        <discovered_dataset designation="BC2" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC2.out" />
+        <discovered_dataset designation="BC3" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC3.out" />
+        <discovered_dataset designation="BC4" ftype="fastqsolexa" file="fastx_barcode_splitter1_BC4.out" />
+        <discovered_dataset designation="unmatched" ftype="fastqsolexa" file="fastx_barcode_splitter1_unmatched.out" />
+      </collection>
     </test>
   </tests>
 
