@@ -6,7 +6,9 @@
 #   Lance Parsons (lparsons@princeton.edu)
 #   3/21/2011 - Modified to accept separate index file for barcodes
 #   4/6/2011 - Modified to cleanup bad barcode identifiers (esp. useful for Galaxy)
-#
+#   4/28/2016 - Modified summary output to remove file paths and add comment
+#               character '#'
+
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as
 #   published by the Free Software Foundation, either version 3 of the
@@ -338,10 +340,10 @@ sub mismatch_count($$) { length( $_[ 0 ] ) - ( ( $_[ 0 ] ^ $_[ 1 ] ) =~ tr[\0][\
 
 sub print_results
 {
-  print "Barcode\tCount\tLocation\n";
+  print "# Barcode\tCount\n";
   my $total = 0 ;
   foreach my $ident (sort keys %counts) {
-    print $ident, "\t", $counts{$ident},"\t",$filenames{$ident},"\n";
+    print $ident, "\t", $counts{$ident},"\n";
     $total += $counts{$ident};
   }
   print "total\t",$total,"\n";

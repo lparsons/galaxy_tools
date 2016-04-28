@@ -20,14 +20,11 @@
 #  2011-03-15  Adapted to allow galaxy to determine filetype
 #  2015-10-21  Updated to make compatible with OSX (BSD sed)
 #  2015-11-13  Removed LIBRARY_NAME, no longer needed
+#  2016-04-28  Output summary as simple tabular output
 
-#This is a shell script wrapper for 'fastx_barcode_splitter.pl'
+# This is a shell script wrapper for 'fastx_barcode_splitter.pl'
 #
 # 1. Output files are saved at the dataset's files_path directory.
-#
-# 2. 'fastx_barcode_splitter.pl' outputs a textual table.
-#    This script turns it into pretty HTML with working URL
-#    (so lazy users can just click on the URLs and get their files)
 
 if [ "$1x" = "x" ]; then
   echo "Usage: $0 [BARCODE FILE] [FASTQ FILE] [OUTPUT_PATH] [FILETYPE]" >&2
@@ -70,10 +67,4 @@ if [ $? != 0 ]; then
   echo "error"
 fi
 
-#
-# Convert the textual tab-separated table into simple HTML table
-echo "<html><body><table border=1>"
-echo "$RESULTS" | sed "s|$BASEPATH\\(.*\\)|\\1|" | \
-perl -n -e '$_ =~ s|\t|</td><td>|g; print "<tr><td>\n$_</td></tr>\n"'
-echo "<p>"
-echo "</table></body></html>"
+echo "$RESULTS"
