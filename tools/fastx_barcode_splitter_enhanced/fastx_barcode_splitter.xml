@@ -106,8 +106,8 @@ Sequences matching the barcode will be stored in the appropriate file.
 
 One additional FASTQ file will be created (the 'unmatched' file), where sequences not matching any barcode will be stored.
 
-The output of this tool is an HTML file, displaying the split counts and the file names.
-In addition, each fastq file produced will be loaded into the galaxy history automatically.
+The output of this tool is a summary tabel displaying the split counts for each barcode identifier.
+In addition, each fastq file produced will be loaded into the galaxy history as part of a collection list.
 ]]>
   </help>
 
