@@ -17,9 +17,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #  Modified by Lance Parsons (lparsons@princeton.edu)
-#	2011-03-15	Adapted to allow galaxy to determine filetype
-#	2015-10-21	Updated to make compatible with OSX (BSD sed)
-#   2015-11-13  Removed LIBRARY_NAME, no longer needed
+#  2011-03-15  Adapted to allow galaxy to determine filetype
+#  2015-10-21  Updated to make compatible with OSX (BSD sed)
+#  2015-11-13  Removed LIBRARY_NAME, no longer needed
 
 #This is a shell script wrapper for 'fastx_barcode_splitter.pl'
 #
@@ -30,8 +30,8 @@
 #    (so lazy users can just click on the URLs and get their files)
 
 if [ "$1x" = "x" ]; then
-	echo "Usage: $0 [BARCODE FILE] [FASTQ FILE] [OUTPUT_PATH] [FILETYPE]" >&2
-	exit 1
+  echo "Usage: $0 [BARCODE FILE] [FASTQ FILE] [OUTPUT_PATH] [FILETYPE]" >&2
+  exit 1
 fi
 
 BARCODE_FILE="$1"
@@ -42,22 +42,22 @@ shift 4
 # The rest of the parameters are passed to the split program
 
 if [ "${OUTPUT_PATH}x" = "x" ]; then
-	echo "Usage: $0 [BARCODE FILE] [FASTQ FILE] [OUTPUT_PATH] [FILETYPE]" >&2
-	exit 1
+  echo "Usage: $0 [BARCODE FILE] [FASTQ FILE] [OUTPUT_PATH] [FILETYPE]" >&2
+  exit 1
 fi
 
 if [ ! -r "$FASTQ_FILE" ]; then
-	echo "Error: Input file ($FASTQ_FILE) not found!" >&2
-	exit 1
+  echo "Error: Input file ($FASTQ_FILE) not found!" >&2
+  exit 1
 fi
 if [ ! -r "$BARCODE_FILE" ]; then
-	echo "Error: barcode file ($BARCODE_FILE) not found!" >&2
-	exit 1
+  echo "Error: barcode file ($BARCODE_FILE) not found!" >&2
+  exit 1
 fi
 mkdir -p "$OUTPUT_PATH"
 if [ ! -d "$OUTPUT_PATH" ]; then
-	echo "Error: failed to create output path '$OUTPUT_PATH'" >&2
-	exit 1
+  echo "Error: failed to create output path '$OUTPUT_PATH'" >&2
+  exit 1
 fi
 
 BASEPATH="$OUTPUT_PATH/"
@@ -67,7 +67,7 @@ DIRECTORY="$(cd "$(dirname "$0")" && pwd)"
 
 RESULTS=$(gzip -cdf "$FASTQ_FILE" | "$DIRECTORY/fastx_barcode_splitter.pl" --bcfile "$BARCODE_FILE" --prefix "$PREFIX" --suffix "$SUFFIX" "$@")
 if [ $? != 0 ]; then
-	echo "error"
+  echo "error"
 fi
 
 #
