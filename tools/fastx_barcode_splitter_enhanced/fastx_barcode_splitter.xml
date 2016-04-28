@@ -1,6 +1,6 @@
 <tool id="cshl_princeton_fastx_barcode_splitter" version="1.2" name="Barcode Splitter">
   <description></description>
-  <command interpreter="bash"><![CDATA[
+  <command interpreter="bash" detect_errors="aggressive"><![CDATA[
 fastx_barcode_splitter_galaxy_wrapper.sh $BARCODE $input "split/" $input.extension --mismatches $mismatches --partial $partial
 #if $refBarcodeLocation.barcodeLocation == "idxfile":
     --idxfile $refBarcodeLocation.idxfile
