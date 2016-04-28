@@ -1,4 +1,4 @@
-<tool id="cshl_princeton_fastx_barcode_splitter" version="1.1" name="Barcode Splitter">
+<tool id="cshl_princeton_fastx_barcode_splitter" version="1.2" name="Barcode Splitter">
   <description></description>
   <command interpreter="bash"><![CDATA[
 fastx_barcode_splitter_galaxy_wrapper.sh $BARCODE $input "split/" $input.extension --mismatches $mismatches --partial $partial
