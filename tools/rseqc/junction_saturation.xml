@@ -50,6 +50,7 @@
                     <validator type="in_range" min="0" max="100" />
                 </param>
             </when>
+            <when value="false"/>
         </conditional>
     </inputs>
 
