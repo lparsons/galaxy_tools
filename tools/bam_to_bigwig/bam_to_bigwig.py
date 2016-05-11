@@ -23,13 +23,16 @@ from contextlib import contextmanager, closing
 
 import pysam
 
+
 def main(bam_file, outfile=None, split=False):
     config = {"program": {"ucsc_bedGraphToBigWig": ["bedGraphToBigWig"],
-                          "bedtools_genomeCoverageBed": ["bedtools", "genomecov"]}}
+                          "bedtools_genomeCoverageBed":
+                          ["bedtools", "genomecov"]}}
     if outfile is None:
         outfile = "%s.bigwig" % os.path.splitext(bam_file)[0]
     if os.path.abspath(bam_file) == os.path.abspath(outfile):
-        sys.stderr.write("Bad arguments, input and output files are the same.\n")
+        sys.stderr.write("Bad arguments, "
+                         "input and output files are the same.\n")
         sys.exit(1)
     if os.path.exists(outfile) and os.path.getsize(outfile) > 0:
         sys.stderr.write("Warning, output file already exists.\n")
@@ -40,21 +43,23 @@ def main(bam_file, outfile=None, split=False):
         sys.stderr.write("Problem reading BAM header.\n")
         sys.exit(1)
 
-    #Use a temp file to avoid any possiblity of not having write permission
+    # Use a temp file to avoid any possiblity of not having write permission
     temp_handle = tempfile.NamedTemporaryFile(delete=False)
     temp_file = temp_handle.name
     with closing(temp_handle):
         print "Calculating coverage..."
         convert_to_graph(bam_file, split, config, temp_handle)
     try:
-        print "Converting %i MB graph file to bigwig..." % (os.path.getsize(temp_file) // (1024 * 1024))
-        #Can't pipe this as stdin due to converter design,
-        #https://lists.soe.ucsc.edu/pipermail/genome/2011-March/025455.html
+        print("Converting %i MB graph file to bigwig..." %
+              (os.path.getsize(temp_file) // (1024 * 1024)))
+        # Can't pipe this as stdin due to converter design,
+        # https://lists.soe.ucsc.edu/pipermail/genome/2011-March/025455.html
         convert_to_bigwig(temp_file, sizes, config, outfile)
     finally:
         if os.path.isfile(temp_file):
             os.remove(temp_file)
     print "Done"
+
 
 @contextmanager
 def indexed_bam(bam_file, config):
@@ -64,25 +69,30 @@ def indexed_bam(bam_file, config):
     yield sam_reader
     sam_reader.close()
 
+
 def get_sizes(bam_file, config):
     with indexed_bam(bam_file, config) as work_bam:
         sizes = zip(work_bam.references, work_bam.lengths)
     return sizes
 
+
 def convert_to_graph(bam_file, split, config, out_handle):
-    cl = config["program"]["bedtools_genomeCoverageBed"] + ["-ibam", bam_file, "-bg"]
+    cl = config["program"]["bedtools_genomeCoverageBed"] + \
+        ["-ibam", bam_file, "-bg"]
     if split:
         cl.append("-split")
     subprocess.check_call(cl, stdout=out_handle)
 
+
 def convert_to_bigwig(bedgraph_file, chr_sizes, config, bw_file):
-    #This will be fine under Galaxy, but could use temp folder?
+    # This will be fine under Galaxy, but could use temp folder?
     size_file = "%s-sizes.txt" % (os.path.splitext(bw_file)[0])
     with open(size_file, "w") as out_handle:
         for chrom, size in chr_sizes:
             out_handle.write("%s\t%s\n" % (chrom, size))
     try:
-        cl = config["program"]["ucsc_bedGraphToBigWig"] + [bedgraph_file, size_file, bw_file]
+        cl = config["program"]["ucsc_bedGraphToBigWig"] + \
+            [bedgraph_file, size_file, bw_file]
         subprocess.check_call(cl)
     finally:
         os.remove(size_file)
