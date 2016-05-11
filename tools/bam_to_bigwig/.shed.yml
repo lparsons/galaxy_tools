@@ -1,0 +1,15 @@
+name: bam_to_bigwig
+owner: brad-chapman
+description: Generate BigWig coverage files from BAM files. Allows gapped reads
+  to be split (useful for RNA-Seq).
+homepage_url: https://github.com/lparsons/galaxy_tools/tree/master/tools/bam_to_bigwig/
+long_description: |
+    Create a BigWig file of coverage data from a BAM file using BEDtools with a
+    bedgraph intermediate. Produces BigWig files suitable for display at UCSC.
+    Requires pysam, BEDtools and bedGraphToBigWig.
+remote_repository_url: https://github.com/lparsons/galaxy_tools/tree/master/tools/bam_to_bigwig/
+type: unrestricted
+categories:
+- Convert Formats
+- SAM
+- Visualization
