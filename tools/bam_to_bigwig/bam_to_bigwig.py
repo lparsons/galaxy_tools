@@ -81,7 +81,15 @@ def convert_to_graph(bam_file, split, config, out_handle):
         ["-ibam", bam_file, "-bg"]
     if split:
         cl.append("-split")
-    subprocess.check_call(cl, stdout=out_handle)
+    new_env = os.environ.copy()
+    new_env['LC_COLLATE'] = 'C'
+    p1 = subprocess.Popen(cl, stdout=subprocess.PIPE)
+    p2 = subprocess.Popen(["sort", "-k1,1", "-k2,2n"],
+                          env=new_env,
+                          stdin=p1.stdout,
+                          stdout=out_handle)
+    p1.stdout.close()
+    p2.communicate()
 
 
 def convert_to_bigwig(bedgraph_file, chr_sizes, config, bw_file):
@@ -97,6 +105,7 @@ def convert_to_bigwig(bedgraph_file, chr_sizes, config, bw_file):
     finally:
         os.remove(size_file)
     return bw_file
+
 
 if __name__ == "__main__":
     parser = OptionParser()

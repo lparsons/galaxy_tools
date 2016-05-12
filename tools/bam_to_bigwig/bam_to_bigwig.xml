@@ -22,8 +22,8 @@
 
   <tests>
     <test>
-      <param name="align" value="pairend_strandspecific_51mer_hg19_chr1_1-100000.bam"/>
-      <output name="out" file="pairend_strandspecific_51mer_hg19_chr1_1-100000.bigwig"/>
+      <param name="align" value="bam_to_bigwig_test.bam"/>
+      <output name="out" file="bam_to_bigwig_test.bigwig"/>
     </test>
   </tests>
 
@@ -50,4 +50,9 @@ be loaded incrementally by UCSC, so a single file can be used to represent the
 entire genome without having to upload the entire thing as a custom track.
 
 ]]></help>
+
+  <citations>
+    <citation type="doi">10.1093/bioinformatics/btp352</citation>
+    <citation type="doi">10.1093/bioinformatics/btq033</citation>
+  </citations>
 </tool>

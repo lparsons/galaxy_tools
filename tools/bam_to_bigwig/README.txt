@@ -1,11 +1,16 @@
-Convert a BAM file into a BigWig coverage file. This can be used directly from 
-Galaxy for display at UCSC. The advantage over standard Wiggle format is that 
+Convert a BAM file into a BigWig coverage file. This can be used directly from
+Galaxy for display at UCSC. The advantage over standard Wiggle format is that
 the data is stored in a compressed format and can be retrieved by genome
 region. This allows you to view regions of arbitrarily large Wiggle file data
 at UCSC while avoiding the upload costs.
 
 History
 -------
+
+v0.2.0 add a sort step after genomeCoverageBed which is required in some
+instances otherwise bedGraphToBigWig will complain. This version also uses
+Galaxy's dependency mechanism, added some tests, and updated some formatting.
+By Lance Parsons.
 
 v0.1.1 passes the forgotten split argument and moves to using the new
 sub-command enabled bedtools. Thanks to David Leader.
