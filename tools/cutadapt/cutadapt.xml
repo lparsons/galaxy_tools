@@ -128,7 +128,7 @@
 
         > $report
     </command>
-    
+
     <inputs>
         <param format="fastq, fastqsanger, fastqillumina, fastqsolexa, fasta" name="input" type="data" optional="false" label="Fastq file to trim" length="100"/>
         <conditional name="paired_end">
@@ -340,7 +340,7 @@ sequencing data. This is usually necessary when the read length of the
 machine is longer than the molecule that is sequenced, such as in
 microRNA data.
 
-The tool is based on the opensource `cutadapt 
+The tool is based on the opensource `cutadapt
 &lt;http://code.google.com/p/cutadapt/>`_ tool. See the `complete cutadapt
 documentation &lt;https://cutadapt.readthedocs.org/en/latest/index.html>`_ for additional details.
 
@@ -461,21 +461,21 @@ When parsing that file, be aware that additional columns may be added in the fut
     <citations>
         <citation type="bibtex">
 @article{marcel_cutadapt_2011,
-	title = {Cutadapt removes adapter sequences from high-throughput sequencing reads},
-	volume = {17},
-	copyright = {Authors who publish with this journal agree to the following terms:     Authors retain copyright and grant the journal right of first publication with the work simultaneously licensed under a  Creative Commons Attribution License  that allows others to share the work with an acknowledgement of the work's authorship and initial publication in this journal.   Authors  are able to enter into separate, additional contractual arrangements  for the non-exclusive distribution of the journal's published version of  the work (e.g., post it to an institutional repository or publish it in  a book), with an acknowledgement of its initial publication in this  journal.   Authors are permitted and encouraged to post their  work online (e.g., in institutional repositories or on their website)  prior to and during the submission process, as it can lead to productive  exchanges, as well as earlier and greater citation of published work  (See  The Effect of Open Access ).},
-	url = {http://journal.embnet.org/index.php/embnetjournal/article/view/200},
-	abstract = {When small RNA is sequenced on current sequencing machines, the resulting reads are usually longer than the RNA and therefore contain parts of the 3' adapter. That adapter must be found and removed error-tolerantly from each read before read mapping. Previous solutions are either hard to use or do not offer required features, in particular support for color space data. As an easy to use alternative, we developed the command-line tool cutadapt, which supports 454, Illumina and SOLiD (color space) data, offers two adapter trimming algorithms, and has other useful features.
+  title = {Cutadapt removes adapter sequences from high-throughput sequencing reads},
+  volume = {17},
+  copyright = {Authors who publish with this journal agree to the following terms:     Authors retain copyright and grant the journal right of first publication with the work simultaneously licensed under a  Creative Commons Attribution License  that allows others to share the work with an acknowledgement of the work's authorship and initial publication in this journal.   Authors  are able to enter into separate, additional contractual arrangements  for the non-exclusive distribution of the journal's published version of  the work (e.g., post it to an institutional repository or publish it in  a book), with an acknowledgement of its initial publication in this  journal.   Authors are permitted and encouraged to post their  work online (e.g., in institutional repositories or on their website)  prior to and during the submission process, as it can lead to productive  exchanges, as well as earlier and greater citation of published work  (See  The Effect of Open Access ).},
+  url = {http://journal.embnet.org/index.php/embnetjournal/article/view/200},
+  abstract = {When small RNA is sequenced on current sequencing machines, the resulting reads are usually longer than the RNA and therefore contain parts of the 3' adapter. That adapter must be found and removed error-tolerantly from each read before read mapping. Previous solutions are either hard to use or do not offer required features, in particular support for color space data. As an easy to use alternative, we developed the command-line tool cutadapt, which supports 454, Illumina and SOLiD (color space) data, offers two adapter trimming algorithms, and has other useful features.
 
 Cutadapt, including its MIT-licensed source code, is available for download at http://code.google.com/p/cutadapt/},
-	number = {1},
-	urldate = {2011-08-02},
-	journal = {EMBnet.journal},
-	author = {Marcel, Martin},
-	year = {2011},
-	note = {When small RNA is sequenced on current sequencing machines, the resulting reads are usually longer than the RNA and therefore contain parts of the 3' adapter. That adapter must be found and removed error-tolerantly from each read before read mapping. Previous solutions are either hard to use or do not offer required features, in particular support for color space data. As an easy to use alternative, we developed the command-line tool cutadapt, which supports 454, Illumina and SOLiD (color space) data, offers two adapter trimming algorithms, and has other useful features.   Cutadapt, including its MIT-licensed source code, is available for download at  http://code.google.com/p/cutadapt/},
-	keywords = {Adapter removal;, fastq, MicroRNA, Sequencing, Small RNA, software},
-	file = {Cutadapt removes adapter sequences from high-throughput sequencing reads | Martin | EMBnet.journal:/Users/lparsons/Library/Application Support/Firefox/Profiles/thd2t4je.default/zotero/storage/ZXZT4PSE/200.html:text/html}
+  number = {1},
+  urldate = {2011-08-02},
+  journal = {EMBnet.journal},
+  author = {Marcel, Martin},
+  year = {2011},
+  note = {When small RNA is sequenced on current sequencing machines, the resulting reads are usually longer than the RNA and therefore contain parts of the 3' adapter. That adapter must be found and removed error-tolerantly from each read before read mapping. Previous solutions are either hard to use or do not offer required features, in particular support for color space data. As an easy to use alternative, we developed the command-line tool cutadapt, which supports 454, Illumina and SOLiD (color space) data, offers two adapter trimming algorithms, and has other useful features.   Cutadapt, including its MIT-licensed source code, is available for download at  http://code.google.com/p/cutadapt/},
+  keywords = {Adapter removal;, fastq, MicroRNA, Sequencing, Small RNA, software},
+  file = {Cutadapt removes adapter sequences from high-throughput sequencing reads | Martin | EMBnet.journal:/Users/lparsons/Library/Application Support/Firefox/Profiles/thd2t4je.default/zotero/storage/ZXZT4PSE/200.html:text/html}
 }
         </citation>
     </citations>
